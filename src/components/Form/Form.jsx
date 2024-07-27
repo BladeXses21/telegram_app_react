@@ -1,32 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import './Form.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { getUserUidByTelegramId, getUserBalance } from '../../api/user';
+import { getUserUidByTelegramId } from '../../api/user';
 
 const Form = () => {
     const { tg } = useTelegram();
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
-    const [silverAmount, setSilverAmount] = useState(0);
+    const [userUid, setUserUid] = useState('0');
 
     useEffect(() => {
-        const fetchUserIdAndBalance = async () => {
+        const fetchUserUid = async () => {
             const user = tg.initDataUnsafe?.user;
 
             if (user) {
                 try {
                     const userData = await getUserUidByTelegramId(user.id);
-                    const uid = userData.uid;
-
-                    // Отримання балансу Silver
-                    const balanceResponse = await getUserBalance(uid);
-                    setSilverAmount(balanceResponse.data.quantity || 0);
+                    setUserUid(userData.uid || 'UID not found');
                 } catch (error) {
-                    console.error('Error fetching user or balance:', error);
+                    console.error('Error fetching user UID:', error);
+                    setUserUid('Error');
                 }
             }
         };
 
-        fetchUserIdAndBalance();
+        fetchUserUid();
 
         const user = tg.initDataUnsafe?.user;
         if (user) {
@@ -56,7 +53,7 @@ const Form = () => {
                 </div>
                 <div className="amount">
                     <label>Silver amount</label>
-                    <span>{silverAmount}</span>
+                    <span>{userUid}</span>
                 </div>
             </div>
         </div>
