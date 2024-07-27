@@ -8,16 +8,40 @@ const Form = () => {
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
     const [id, setId] = useState(0);
 
+    const useUserBalance = (tg, apiUrl) => {
+        const [silverAmount, setSilverAmount] = useState(0);
+
+        useEffect(() => {
+            const fetchUserIdAndBalance = async () => {
+                const user = tg.initDataUnsafe?.user;
+
+                if (user) {
+                    try {
+                        // Отримання uid за telegram_id
+                        const userResponse = await fetch(`${apiUrl}/api/user/telegram/${user.id}`);
+                        if (!userResponse.ok) throw new Error('Failed to fetch user ID');
+                        const userData = await userResponse.json();
+                        const uid = userData.uid;
+
+                        // Отримання балансу Silver
+                        const balanceResponse = await fetch(`${apiUrl}/api/user/${uid}/balance`);
+                        if (!balanceResponse.ok) throw new Error('Failed to fetch balance');
+                        const balanceData = await balanceResponse.json();
+
+                        setSilverAmount(balanceData.quantity || 0);
+                    } catch (error) {
+                        console.error('Error fetching user or balance:', error);
+                    }
+                }
+            };
+
+            fetchUserIdAndBalance();
+        }, [tg, apiUrl]);
+
+        return silverAmount;
+    };
+
     useEffect(() => {
-        const fetchUserIdAndBalance = async () => {
-            const user = tg.initDataUnsafe?.user;
-
-            if (user) {
-                const userResponse = await fetch(`${apiUrl}/api/user/telegram/${user.id}`);
-                const userData = await userResponse.json();
-                setId(userData.uid);
-            }
-
             if (user) {
                 if (user.photo_url) {
                     setProfilePhotoUrl(user.photo_url);
@@ -51,7 +75,7 @@ const Form = () => {
                 </div>
                 <div className="amount">
                     <label>Silver amount</label>
-                    <span>{id}</span>
+                    <span>{useUserBalance(tg, apiUrl)}</span>
                 </div>
             </div>
         </div>
