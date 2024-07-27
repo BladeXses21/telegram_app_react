@@ -3,12 +3,39 @@ import './Form.css';
 import { useTelegram } from '../../hooks/useTelegram';
 
 const Form = () => {
-    const { tg } = useTelegram();
+    const { tg, user } = useTelegram();
+    const apiUrl = 'http://localhost:8080';
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
 
     useEffect(() => {
+        tg.ready();
+
+        const registerUser = async () => {
+            if (tg.initDataUnsafe?.user) {
+                const { username } = tg.initDataUnsafe.user;
+
+                try {
+                    await fetch(`${apiUrl}/api/user`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username
+                        })
+                    });
+                } catch (error) {
+                    console.error('Error registering user:', error);
+                }
+            }
+        };
+
+        registerUser();
+    }, [tg]);
+
+    useEffect(() => {
         const user = tg.initDataUnsafe?.user;
-        console.log('User Data:', user); // Виведення даних користувача в консоль для перевірки
+        console.log('User Data:', user);
 
         if (user) {
             if (user.photo_url) {

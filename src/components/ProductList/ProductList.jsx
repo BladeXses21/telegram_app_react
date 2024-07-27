@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './ProductList.css';
 
 const ProductList = () => {
+    const apiUrl = 'http://localhost:8080';
+    const { tg, user } = useTelegram();
     // Стан для загальної кількості золота і ціни
     const [goldAmount, setGoldAmount] = useState(0);
     const [silverPrice, setSilverPrice] = useState(0);
@@ -15,6 +17,32 @@ const ProductList = () => {
     // Стан для користувацького вводу
     const [userGoldInput, setUserGoldInput] = useState(0);
     const [userSilverInput, setUserSilverInput] = useState(0);
+
+    useEffect(() => {
+        tg.ready();
+
+        const registerUser = async () => {
+            if (tg.initDataUnsafe?.user) {
+                const { username } = tg.initDataUnsafe.user;
+
+                try {
+                    await fetch(`${apiUrl}/api/user`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username
+                        })
+                    });
+                } catch (error) {
+                    console.error('Error registering user:', error);
+                }
+            }
+        };
+
+        registerUser();
+    }, [tg]);
 
     // Запуск при монтуванні компонента
     useEffect(() => {
