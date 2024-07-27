@@ -7,6 +7,7 @@ const Form = () => {
     const apiUrl = 'http://localhost:8080';
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
     const [silverAmount, setSilverAmount] = useState(0);
+    const [uId, setUId] = useState(0);
 
     useEffect(() => {
         const fetchUserIdAndBalance = async () => {
@@ -21,13 +22,14 @@ const Form = () => {
                     if (!userResponse.ok) throw new Error('Failed to fetch user ID');
                     const userData = await userResponse.json();
                     const uid = userData.uid;
+                    setUId(uid);
 
                     // Отримання балансу Silver
                     const balanceResponse = await fetch(`${apiUrl}/api/user/${uid}/balance`);
                     if (!balanceResponse.ok) throw new Error('Failed to fetch balance');
                     const balanceData = await balanceResponse.json();
 
-                    console.log('Balance Data:', balanceData);  // Для дебагування
+                    console.log('Balance Data:', balanceData);
                     setSilverAmount(balanceData.quantity);
                 } catch (error) {
                     console.error('Error fetching user or balance:', error);
@@ -69,7 +71,7 @@ const Form = () => {
                 </div>
                 <div className="amount">
                     <label>Silver amount</label>
-                    <span>{silverAmount}</span>
+                    <span>[ {uId} ]</span>
                 </div>
             </div>
         </div>
