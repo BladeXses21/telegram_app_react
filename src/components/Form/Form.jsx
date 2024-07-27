@@ -9,18 +9,25 @@ const Form = () => {
     const [silverAmount, setSilverAmount] = useState(0);
 
     useEffect(() => {
-        const user = tg.initDataUnsafe?.user;
-        const fetchUserId = async () => {
+        const fetchUserIdAndBalance = async () => {
+            const user = tg.initDataUnsafe?.user;
+
             if (user) {
                 const userId = user.id;
+
                 try {
-                    const response = await fetch(`${apiUrl}/api/user/telegram/${userId}`);
-                    const data = await response.json();
-                    const uid = data.uid;
+                    // Отримання uid за telegram_id
+                    const userResponse = await fetch(`${apiUrl}/api/user/telegram/${userId}`);
+                    if (!userResponse.ok) throw new Error('Failed to fetch user ID');
+                    const userData = await userResponse.json();
+                    const uid = userData.uid;
 
                     // Отримання балансу Silver
                     const balanceResponse = await fetch(`${apiUrl}/api/user/${uid}/balance`);
+                    if (!balanceResponse.ok) throw new Error('Failed to fetch balance');
                     const balanceData = await balanceResponse.json();
+
+                    console.log('Balance Data:', balanceData);  // Для дебагування
                     setSilverAmount(balanceData.quantity);
                 } catch (error) {
                     console.error('Error fetching user or balance:', error);
@@ -28,15 +35,15 @@ const Form = () => {
             }
         };
 
-        fetchUserId();
+        fetchUserIdAndBalance();
 
+        const user = tg.initDataUnsafe?.user;
         if (user) {
             if (user.photo_url) {
                 setProfilePhotoUrl(user.photo_url);
             } else {
                 setProfilePhotoUrl('https://via.placeholder.com/150');
             }
-
         } else {
             setProfilePhotoUrl('https://via.placeholder.com/150');
         }
