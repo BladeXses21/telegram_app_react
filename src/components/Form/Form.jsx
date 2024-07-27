@@ -6,20 +6,18 @@ const Form = () => {
     const { tg } = useTelegram();
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
 
-
-    useEffect(() => {
-        tg.MainButton.setParams({
-            text: 'send data'
-        });
-    }, []);
-
     useEffect(() => {
         const user = tg.initDataUnsafe?.user;
         console.log('User Data:', user); // Виведення даних користувача в консоль для перевірки
 
         if (user) {
-            const url = user.photo_url || 'https://via.placeholder.com/150';
-            setProfilePhotoUrl(url);
+            if (user.photo_url) {
+                setProfilePhotoUrl(user.photo_url);
+            } else {
+                setProfilePhotoUrl('https://via.placeholder.com/150');
+            }
+        } else {
+            setProfilePhotoUrl('https://via.placeholder.com/150');
         }
     }, [tg]);
 
