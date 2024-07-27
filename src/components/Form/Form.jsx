@@ -6,7 +6,7 @@ const Form = () => {
     const { tg } = useTelegram();
     const apiUrl = 'http://localhost:8080';
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
-    const [silverAmount, setSilverAmount] = useState(0);
+    const [silverAmount, setSilverAmount] = useState("");
 
     useEffect(() => {
         const user = tg.initDataUnsafe?.user;
