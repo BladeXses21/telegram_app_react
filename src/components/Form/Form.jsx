@@ -9,19 +9,27 @@ const Form = () => {
     const [id, setId] = useState(0);
 
     useEffect(() => {
-        const user = tg.initDataUnsafe?.user;
-        setId(user.id)
-        console.log('User Data:', user);
+        const fetchUserIdAndBalance = async () => {
+            const user = tg.initDataUnsafe?.user;
 
-        if (user) {
-            if (user.photo_url) {
-                setProfilePhotoUrl(user.photo_url);
+            if (user) {
+                const telegramId = user.id
+                const userResponse = await fetch(`${apiUrl}/api/user/telegram/${telegramId}`);
+                const userData = await userResponse.json();
+                const uid = userData.uid;
+                setId(uid);
+            }
+
+            if (user) {
+                if (user.photo_url) {
+                    setProfilePhotoUrl(user.photo_url);
+                } else {
+                    setProfilePhotoUrl('https://via.placeholder.com/150');
+                }
+
             } else {
                 setProfilePhotoUrl('https://via.placeholder.com/150');
             }
-
-        } else {
-            setProfilePhotoUrl('https://via.placeholder.com/150');
         }
     }, [tg]);
 
