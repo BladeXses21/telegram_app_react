@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
+import { useTelegram } from '../../hooks/useTelegram';
 
 const ProductList = () => {
     const apiUrl = 'http://localhost:8080';
