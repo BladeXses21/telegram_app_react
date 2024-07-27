@@ -13,11 +13,9 @@ const Form = () => {
             const user = tg.initDataUnsafe?.user;
 
             if (user) {
-                const telegramId = user.id
-                const userResponse = await fetch(`${apiUrl}/api/user/telegram/${telegramId}`);
+                const userResponse = await fetch(`${apiUrl}/api/user/telegram/${user.id}`);
                 const userData = await userResponse.json();
-                const uid = userData.uid;
-                setId(uid);
+                setId(userData.uid);
             }
 
             if (user) {
