@@ -1,32 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import './Form.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { getUserUidByTelegramId } from '../../api/user';
+import getUserData from '../../api/user';
 
 const Form = () => {
     const { tg } = useTelegram();
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
-    const [userUid, setUserUid] = useState('0');
-    const [error, setError] = useState(null);
+    const [userId, setUserId] = useState('Loading...');
 
     useEffect(() => {
-        const fetchUserUid = async () => {
-            const user = tg.initDataUnsafe?.user;
-
-            if (user) {
-                try {
-                    const userData = await getUserUidByTelegramId(user.id);
-                    setUserUid(userData.uid || 'UID not found');
-                } catch (error) {
-                    console.error('Error fetching user UID:', error);
-                    setUserUid('Error');
-                    setError(error.message || 'Unknown error');
-                }
+        const fetchUserData = async () => {
+            try {
+                const data = await getUserData(513894647);
+                setUserId(data.uid);
+            } catch (error) {
+                setUserId(error.message);
             }
         };
 
-        fetchUserUid();
+        fetchUserData();
+    }, [tg]);
 
+    useEffect(() => {
         const user = tg.initDataUnsafe?.user;
         if (user) {
             setProfilePhotoUrl(user.photo_url || 'https://via.placeholder.com/150');
@@ -55,7 +50,7 @@ const Form = () => {
                 </div>
                 <div className="amount">
                     <label>Silver amount</label>
-                    <span>{userUid}</span>
+                    <span>{userId}</span>
                 </div>
             </div>
             {error && <div className="error">Error: {error}</div>}
