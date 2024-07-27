@@ -7,6 +7,7 @@ const Form = () => {
     const { tg } = useTelegram();
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
     const [userUid, setUserUid] = useState('0');
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchUserUid = async () => {
@@ -19,6 +20,7 @@ const Form = () => {
                 } catch (error) {
                     console.error('Error fetching user UID:', error);
                     setUserUid('Error');
+                    setError(error.message || 'Unknown error');
                 }
             }
         };
@@ -56,6 +58,7 @@ const Form = () => {
                     <span>{userUid}</span>
                 </div>
             </div>
+            {error && <div className="error">Error: {error}</div>}
         </div>
     );
 };

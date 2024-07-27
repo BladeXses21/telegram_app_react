@@ -7,7 +7,8 @@ export const getUserUidByTelegramId = async (telegramId) => {
         const response = await axios.get(`${apiUrl}/api/user/telegram/${telegramId}`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching user UID:', error);
-        throw error;
+        const errorMsg = error.response ? error.response.data : error.message;
+        console.error('Error fetching user UID:', errorMsg);
+        throw new Error(errorMsg);
     }
 };
