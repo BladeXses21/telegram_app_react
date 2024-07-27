@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = 'http://localhost:8080';
+const apiUrl = 'https://b84c-91-245-124-201.ngrok-free.app';
 
 export const getUserUidByTelegramId = async (telegramId) => {
     try {
