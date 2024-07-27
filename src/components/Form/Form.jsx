@@ -3,39 +3,32 @@ import './Form.css';
 import { useTelegram } from '../../hooks/useTelegram';
 
 const Form = () => {
-    const { tg, user } = useTelegram();
+    const { tg } = useTelegram();
     const apiUrl = 'http://localhost:8080';
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
+    const [silverAmount, setSilverAmount] = useState(0);
 
     useEffect(() => {
-        tg.ready();
-
-        const registerUser = async () => {
-            if (tg.initDataUnsafe?.user) {
-                const { username } = tg.initDataUnsafe.user;
-
+        const user = tg.initDataUnsafe?.user;
+        const fetchUserId = async () => {
+            if (user) {
+                const userId = user.id;
                 try {
-                    await fetch(`${apiUrl}/api/user`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            username
-                        })
-                    });
+                    const response = await fetch(`${apiUrl}/api/user/telegram/${userId}`);
+                    const data = await response.json();
+                    const uid = data.uid;
+
+                    // Отримання балансу Silver
+                    const balanceResponse = await fetch(`${apiUrl}/api/user/${uid}/balance`);
+                    const balanceData = await balanceResponse.json();
+                    setSilverAmount(balanceData.quantity);
                 } catch (error) {
-                    console.error('Error registering user:', error);
+                    console.error('Error fetching user or balance:', error);
                 }
             }
         };
 
-        registerUser();
-    }, [tg]);
-
-    useEffect(() => {
-        const user = tg.initDataUnsafe?.user;
-        console.log('User Data:', user);
+        fetchUserId();
 
         if (user) {
             if (user.photo_url) {
@@ -43,6 +36,7 @@ const Form = () => {
             } else {
                 setProfilePhotoUrl('https://via.placeholder.com/150');
             }
+
         } else {
             setProfilePhotoUrl('https://via.placeholder.com/150');
         }
@@ -68,7 +62,7 @@ const Form = () => {
                 </div>
                 <div className="amount">
                     <label>Silver amount</label>
-                    <span>0</span>
+                    <span>{silverAmount}</span>
                 </div>
             </div>
         </div>

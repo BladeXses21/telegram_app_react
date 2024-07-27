@@ -19,32 +19,6 @@ const ProductList = () => {
     const [userGoldInput, setUserGoldInput] = useState(0);
     const [userSilverInput, setUserSilverInput] = useState(0);
 
-    useEffect(() => {
-        tg.ready();
-
-        const registerUser = async () => {
-            if (tg.initDataUnsafe?.user) {
-                const { username } = tg.initDataUnsafe.user;
-
-                try {
-                    await fetch(`${apiUrl}/api/user`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            username
-                        })
-                    });
-                } catch (error) {
-                    console.error('Error registering user:', error);
-                }
-            }
-        };
-
-        registerUser();
-    }, [tg]);
-
     // Запуск при монтуванні компонента
     useEffect(() => {
         // Тут ти б робив запити до бази даних, а поки просто ініціалізуємо дані
