@@ -14,8 +14,13 @@ const Form = () => {
     }, []);
 
     useEffect(() => {
-        const url = tg.initDataUnsafe?.user?.photo_url || 'https://via.placeholder.com/150';
-        setProfilePhotoUrl(url);
+        const user = tg.initDataUnsafe?.user;
+        console.log('User Data:', user); // Виведення даних користувача в консоль для перевірки
+
+        if (user) {
+            const url = user.photo_url || 'https://via.placeholder.com/150';
+            setProfilePhotoUrl(url);
+        }
     }, [tg]);
 
     const username = tg.initDataUnsafe?.user?.username || 'Username not available';
