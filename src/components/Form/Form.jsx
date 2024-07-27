@@ -7,6 +7,7 @@ const Form = () => {
     const { tg } = useTelegram();
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
     const [userId, setUserId] = useState('Loading...');
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -14,17 +15,18 @@ const Form = () => {
                 const data = await getUserData(513894647);
                 setUserId(data.uid);
             } catch (error) {
-                setUserId(error.message);
+                setError(error.message);
+                setUserId('Error');
             }
         };
 
         fetchUserData();
-    }, [tg]);
+    }, []);
 
     useEffect(() => {
         const user = tg.initDataUnsafe?.user;
-        if (user) {
-            setProfilePhotoUrl(user.photo_url || 'https://via.placeholder.com/150');
+        if (user && user.photo_url) {
+            setProfilePhotoUrl(user.photo_url);
         } else {
             setProfilePhotoUrl('https://via.placeholder.com/150');
         }
@@ -33,11 +35,11 @@ const Form = () => {
     const username = tg.initDataUnsafe?.user?.username || 'Username not available';
 
     return (
-        <div className={"form"}>
+        <div className="form">
             <h3>Ur data</h3>
             <div className="profile-info">
                 <img src={profilePhotoUrl} alt="Profile" className="profile-photo" onError={(e) => e.target.src = 'https://via.placeholder.com/150'} />
-                <span className={'username'}>{username}</span>
+                <span className="username">{username}</span>
             </div>
             <div className="amounts">
                 <div className="amount">
