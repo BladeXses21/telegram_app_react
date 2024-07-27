@@ -1,0 +1,37 @@
+.gold-market {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.market-summary, .buy-sell, .user-list {
+    margin-bottom: 20px;
+}
+
+h2, h3 {
+    margin-bottom: 10px;
+}
+
+input {
+    margin-right: 10px;
+    padding: 5px;
+}
+
+button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+}
