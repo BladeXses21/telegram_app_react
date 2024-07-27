@@ -13,8 +13,10 @@ const Form = () => {
         const fetchUserData = async () => {
             try {
                 const data = await getUserData(513894647);
+                console.log('User data received:', data);
                 setUserId(data.uid);
             } catch (error) {
+                console.error('Error fetching user data:', error);
                 setError(error.message);
                 setUserId('Error');
             }
