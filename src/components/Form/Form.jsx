@@ -9,16 +9,16 @@ const Form = () => {
     const [silverAmount, setSilverAmount] = useState(0);
 
     useEffect(() => {
-        const user = tg.initDataUnsafe?.user;
-
         const fetchUserIdAndBalance = async () => {
+            const user = tg.initDataUnsafe?.user;
+
             if (user) {
                 try {
                     const userData = await getUserUidByTelegramId(user.id);
                     const uid = userData.uid;
 
                     // Отримання балансу Silver
-                    const balanceResponse = await axios.get(`${apiUrl}/api/user/${uid}/balance`);
+                    const balanceResponse = await getUserBalance(uid);
                     setSilverAmount(balanceResponse.data.quantity || 0);
                 } catch (error) {
                     console.error('Error fetching user or balance:', error);
@@ -28,6 +28,7 @@ const Form = () => {
 
         fetchUserIdAndBalance();
 
+        const user = tg.initDataUnsafe?.user;
         if (user) {
             setProfilePhotoUrl(user.photo_url || 'https://via.placeholder.com/150');
         } else {
