@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { fetchMarketData, makeTransaction } from '../../api/user';
+import { fetchMarketData, getUserData, getUserBalance, makeTransaction } from '../../api/user';
 
 const ProductList = () => {
     const { tg, user } = useTelegram();
@@ -16,9 +16,12 @@ const ProductList = () => {
         const fetchData = async () => {
             try {
                 const marketData = await fetchMarketData();
-                setGoldAmount(marketData.goldAmount);
-                setSilverPrice(marketData.silverPrice);
-                setSilverAmount(marketData.silverAmount);
+                const userData = await getUserData(user.id);
+                const userBalance = await getUserBalance(user.id);
+
+                setGoldAmount(Number(marketData.goldAmount));
+                setSilverPrice(Number(marketData.silverPrice) || 1);
+                setSilverAmount(Number(userBalance.silver));  // Отримуємо баланс конкретного користувача
                 setUsers(marketData.users);
             } catch (error) {
                 console.error('Error fetching market data:', error);
@@ -26,7 +29,7 @@ const ProductList = () => {
         };
 
         fetchData();
-    }, []);
+    }, [user.id]);
 
     const handleBuyGold = async () => {
         if (buyGoldAmount <= 0) return;
@@ -34,8 +37,8 @@ const ProductList = () => {
             const totalCost = buyGoldAmount * silverPrice;
             if (totalCost <= silverAmount) {
                 await makeTransaction(user.id, buyGoldAmount, 'buy');
-                setGoldAmount(goldAmount + buyGoldAmount);
-                setSilverAmount(silverAmount - totalCost);
+                setGoldAmount(prevGoldAmount => prevGoldAmount + buyGoldAmount);
+                setSilverAmount(prevSilverAmount => prevSilverAmount - totalCost);
             } else {
                 alert('Не вистачає срібла для покупки!');
             }
@@ -50,8 +53,8 @@ const ProductList = () => {
             const totalEarnings = sellGoldAmount * silverPrice;
             if (sellGoldAmount <= goldAmount) {
                 await makeTransaction(user.id, sellGoldAmount, 'sell');
-                setGoldAmount(goldAmount - sellGoldAmount);
-                setSilverAmount(silverAmount + totalEarnings);
+                setGoldAmount(prevGoldAmount => prevGoldAmount - sellGoldAmount);
+                setSilverAmount(prevSilverAmount => prevSilverAmount + totalEarnings);
             } else {
                 alert('Не вистачає золота для продажу!');
             }
