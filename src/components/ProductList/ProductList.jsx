@@ -16,7 +16,7 @@ const ProductList = () => {
                 setExchangeRate(gold_price_data.rate)
             } catch (error) {
                 setGoldAmount('Error fetching data');
-                setGoldPrice('Error fetching data');
+                setExchangeRate('Error fetching data');
             }
         };
 

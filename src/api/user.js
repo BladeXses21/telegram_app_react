@@ -38,7 +38,7 @@ const getTotalGold = async () => {
 
 const getExchangeRate = async () => {
     try {
-        const response = await axios.get(`${apiUrl}/api/total-gold`);
+        const response = await axios.get(`${apiUrl}/api/get-rate`);
         console.log('Gold api response:', response.data);
         return response.data;
     } catch (error) {
