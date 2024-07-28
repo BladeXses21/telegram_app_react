@@ -36,21 +36,21 @@ const fetchMarketData = async () => {
     }
 };
 
-const buyGold = async (goldAmount) => {
+const buyGold = async (userId, goldAmount) => {
     try {
-        const response = await axios.post(`${apiUrl}/api/buy-gold`, { userId: 1, goldAmount });
+        const response = await axios.post(`${API_URL}/buy-gold`, { userId, goldAmount });
         return response.data;
     } catch (error) {
-        throw new Error('Error: ' + error.message);
+        throw new Error(error.response?.data?.message || 'Failed to buy gold');
     }
 };
 
-const sellGold = async (goldAmount) => {
+const sellGold = async (userId, goldAmount) => {
     try {
-        const response = await axios.post(`${apiUrl}/api/sell-gold`, { userId: 1, goldAmount });
+        const response = await axios.post(`${API_URL}/sell-gold`, { userId, goldAmount });
         return response.data;
     } catch (error) {
-        throw new Error('Error: ' + error.message);
+        throw new Error(error.response?.data?.message || 'Failed to sell gold');
     }
 };
 

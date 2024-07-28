@@ -37,7 +37,11 @@ const ProductList = () => {
 
     const handleBuyGold = async () => {
         try {
-            const data = await buyGold(goldAmount);
+            const user = tg.initDataUnsafe?.user;
+            if (!user) {
+                throw new Error('User not found');
+            }
+            const data = await buyGold(user.id, goldAmount);
             setCurrentUserGold(data.newGoldAmount);
             setCurrentUserSilver(data.newSilverAmount);
             setMarketData(data.marketData);
@@ -48,7 +52,11 @@ const ProductList = () => {
 
     const handleSellGold = async () => {
         try {
-            const data = await sellGold(goldAmount);
+            const user = tg.initDataUnsafe?.user;
+            if (!user) {
+                throw new Error('User not found');
+            }
+            const data = await sellGold(user.id, goldAmount);
             setCurrentUserGold(data.newGoldAmount);
             setCurrentUserSilver(data.newSilverAmount);
             setMarketData(data.marketData);
