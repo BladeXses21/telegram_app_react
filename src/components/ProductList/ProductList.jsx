@@ -41,11 +41,13 @@ const ProductList = () => {
             if (!user) {
                 throw new Error('User not found');
             }
+            console.log('Buying gold:', { userId: user.id, goldAmount }); // Logging
             const data = await buyGold(user.id, goldAmount);
             setCurrentUserGold(data.newGoldAmount);
             setCurrentUserSilver(data.newSilverAmount);
             setMarketData(data.marketData);
         } catch (error) {
+            console.error('Error buying gold:', error); // Logging error
             setError(error.message);
         }
     };
@@ -56,11 +58,13 @@ const ProductList = () => {
             if (!user) {
                 throw new Error('User not found');
             }
+            console.log('Selling gold:', { userId: user.id, goldAmount }); // Logging
             const data = await sellGold(user.id, goldAmount);
             setCurrentUserGold(data.newGoldAmount);
             setCurrentUserSilver(data.newSilverAmount);
             setMarketData(data.marketData);
         } catch (error) {
+            console.error('Error selling gold:', error); // Logging error
             setError(error.message);
         }
     };
