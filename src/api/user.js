@@ -25,4 +25,14 @@ const getUserBalance = async (userId) => {
     }
 };
 
-export { getUserData, getUserBalance };
+const buyOrSellGoldCoin = async (userId, amount, transactionType) => {
+    try {
+        const response = await axios.post(`${apiUrl}/api/transaction`, { userId, amount, transactionType });
+        return response.data;
+    } catch (error) {
+        console.error(`Error ${transactionType}ing gold coin:`, error);
+        throw error;
+    }
+};
+
+export { getUserData, getUserBalance, buyOrSellGoldCoin };

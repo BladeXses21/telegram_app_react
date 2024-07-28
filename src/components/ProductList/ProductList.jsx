@@ -1,63 +1,73 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
 import { useTelegram } from '../../hooks/useTelegram';
+import axios from 'axios';
 
 const ProductList = () => {
     const apiUrl = 'http://localhost:8080';
     const { tg, user } = useTelegram();
-    // Стан для загальної кількості золота і ціни
     const [goldAmount, setGoldAmount] = useState(0);
     const [silverPrice, setSilverPrice] = useState(0);
     const [silverAmount, setSilverAmount] = useState(0);
     const [users, setUsers] = useState([]);
-
-    // Стан для полів купівлі/продажу
     const [buyGoldAmount, setBuyGoldAmount] = useState(0);
     const [sellGoldAmount, setSellGoldAmount] = useState(0);
 
-    // Стан для користувацького вводу
-    const [userGoldInput, setUserGoldInput] = useState(0);
-    const [userSilverInput, setUserSilverInput] = useState(0);
-
-    // Запуск при монтуванні компонента
     useEffect(() => {
-        // Тут ти б робив запити до бази даних, а поки просто ініціалізуємо дані
-        setGoldAmount(100); // загальна кількість золота
-        setSilverPrice(10); // ціна золота в сріблі
-        setSilverAmount(500); // кількість срібла
-        setUsers([
-            { username: 'user1', gold: 20, silver: 150 },
-            { username: 'user2', gold: 10, silver: 250 }
-        ]);
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/api/market-data`);
+                setGoldAmount(response.data.goldAmount);
+                setSilverPrice(response.data.silverPrice);
+                setSilverAmount(response.data.silverAmount);
+                setUsers(response.data.users);
+            } catch (error) {
+                console.error('Error fetching market data:', error);
+            }
+        };
+
+        fetchData();
     }, []);
 
-    // Обробка покупки золота
-    const handleBuyGold = () => {
-        // Логіка для покупки золота
-        const totalCost = buyGoldAmount * silverPrice;
-        if (totalCost <= silverAmount) {
-            setGoldAmount(goldAmount + buyGoldAmount);
-            setSilverAmount(silverAmount - totalCost);
-        } else {
-            alert('Не вистачає срібла для покупки!');
+    const handleBuyGold = async () => {
+        if (buyGoldAmount <= 0) return;
+        try {
+            const totalCost = buyGoldAmount * silverPrice;
+            if (totalCost <= silverAmount) {
+                await axios.post(`${apiUrl}/api/transaction`, {
+                    userId: user.id,
+                    amount: buyGoldAmount,
+                    transactionType: 'buy'
+                });
+                setGoldAmount(goldAmount + buyGoldAmount);
+                setSilverAmount(silverAmount - totalCost);
+            } else {
+                alert('Не вистачає срібла для покупки!');
+            }
+        } catch (error) {
+            console.error('Error buying gold:', error);
         }
     };
 
-    // Обробка продажу золота
-    const handleSellGold = () => {
-        // Логіка для продажу золота
-        const totalEarnings = sellGoldAmount * silverPrice;
-        if (sellGoldAmount <= goldAmount) {
-            setGoldAmount(goldAmount - sellGoldAmount);
-            setSilverAmount(silverAmount + totalEarnings);
-        } else {
-            alert('Не вистачає золота для продажу!');
+    const handleSellGold = async () => {
+        if (sellGoldAmount <= 0) return;
+        try {
+            const totalEarnings = sellGoldAmount * silverPrice;
+            if (sellGoldAmount <= goldAmount) {
+                await axios.post(`${apiUrl}/api/transaction`, {
+                    userId: user.id,
+                    amount: sellGoldAmount,
+                    transactionType: 'sell'
+                });
+                setGoldAmount(goldAmount - sellGoldAmount);
+                setSilverAmount(silverAmount + totalEarnings);
+            } else {
+                alert('Не вистачає золота для продажу!');
+            }
+        } catch (error) {
+            console.error('Error selling gold:', error);
         }
     };
-
-    // Оновлення полів вводу
-    const handleUserGoldInputChange = (e) => setUserGoldInput(Number(e.target.value));
-    const handleUserSilverInputChange = (e) => setUserSilverInput(Number(e.target.value));
 
     return (
         <div className="gold-market">
@@ -85,7 +95,7 @@ const ProductList = () => {
                         onChange={(e) => setBuyGoldAmount(Number(e.target.value))}
                         placeholder="Amount to buy"
                     />
-                    <button onClick={handleBuyGold}>Buy</button>
+                    <button onClick={handleBuyGold} disabled={buyGoldAmount <= 0}>Buy</button>
                 </div>
                 <div>
                     <h3>Sell Gold</h3>
@@ -95,7 +105,7 @@ const ProductList = () => {
                         onChange={(e) => setSellGoldAmount(Number(e.target.value))}
                         placeholder="Amount to sell"
                     />
-                    <button onClick={handleSellGold}>Sell</button>
+                    <button onClick={handleSellGold} disabled={sellGoldAmount <= 0}>Sell</button>
                 </div>
             </div>
             <div className="user-list">
@@ -109,7 +119,7 @@ const ProductList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map(user => (
+                        {users.map((user) => (
                             <tr key={user.username}>
                                 <td>{user.username}</td>
                                 <td>{user.gold}</td>
