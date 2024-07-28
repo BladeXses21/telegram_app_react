@@ -6,19 +6,12 @@ const getUserData = async (telegramUserId) => {
     try {
         const timestamp = new Date().getTime();
         const response = await axios.get(`${apiUrl}/api/user/telegram/${telegramUserId}?timestamp=${timestamp}`);
+        console.log('API response:', response.data);
         return response.data;
     } catch (error) {
+        console.error('Error in API call:', error);
         throw new Error('Error: ' + error.message);
     }
 };
 
-const getUserBalance = async (userId) => {
-    try {
-        const response = await axios.get(`${apiUrl}/api/user/${userId}/balance`);
-        return response.data;
-    } catch (error) {
-        throw new Error('Error: ' + error.message);
-    }
-};
-
-export { getUserData, getUserBalance };
+export default getUserData;
