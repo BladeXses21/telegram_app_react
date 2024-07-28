@@ -36,4 +36,26 @@ const getTotalGold = async () => {
     }
 };
 
-export { getUserData, getUserBalance, getTotalGold };
+const getExchangeRate = async () => {
+    try {
+        const response = await axios.get(`${apiUrl}/api/total-gold`);
+        console.log('Gold api response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error in Gold API call:', error);
+        throw new Error('Error: ' + error.message);
+    }
+};
+
+const getGoldPrice = async () => {
+    try {
+        const response = await axios.get(`${apiUrl}/api/gold-price`);
+        console.log('Gold api response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error in Gold API call:', error);
+        throw new Error('Error: ' + error.message);
+    }
+};
+
+export { getUserData, getUserBalance, getTotalGold, getGoldPrice };
