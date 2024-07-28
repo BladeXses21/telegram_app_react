@@ -26,30 +26,14 @@ const getUserBalance = async (userId) => {
 };
 
 const fetchMarketData = async () => {
-    const response = await fetch(`${apiUrl}/market-data`);
-    const data = await response.json();
-    return data;
-};
-
-const makeTransaction = async (userId, amount, transactionType) => {
-    const response = await fetch(`${apiUrl}/transaction`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            userId,
-            amount,
-            transactionType
-        }),
-    });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message);
+    try {
+        const response = await axios.get(`${apiUrl}/market-data`);
+        console.log('Market Data API response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error in Market Data API call:', error);
+        throw new Error('Error: ' + error.message);
     }
-
-    return await response.json();
 };
 
-export { getUserData, getUserBalance, fetchMarketData, makeTransaction };
+export { getUserData, getUserBalance, fetchMarketData };
