@@ -19,7 +19,7 @@ const ProductList = () => {
                 // Отримання даних користувача
                 const user = tg.initDataUnsafe?.user;
                 if (user && user.id && data.users) {
-                    const currentUser = data.users.find(u => u.id.toString() === user.id.toString());
+                    const currentUser = data.users.find(u => u.name === user.username);
                     if (currentUser) {
                         setCurrentUserGold(currentUser.goldAmount);
                         setCurrentUserSilver(currentUser.silverAmount);
