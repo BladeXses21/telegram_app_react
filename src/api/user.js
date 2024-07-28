@@ -58,4 +58,4 @@ const getGoldPrice = async () => {
     }
 };
 
-export { getUserData, getUserBalance, getTotalGold, getGoldPrice };
+export { getUserData, getUserBalance, getTotalGold, getExchangeRate, getGoldPrice };

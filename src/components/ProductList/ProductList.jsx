@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
-import { getTotalGold, getGoldPrice } from '../../api/user';
+import { getTotalGold, getGoldPrice, getExchangeRate } from '../../api/user';
 
 const ProductList = () => {
     const [goldAmount, setGoldAmount] = useState('Loading...');
     const [goldPrice, setGoldPrice] = useState('Loading...');
+    const [exchangeRate, setExchangeRate] = useState('Loading...');
 
     useEffect(() => {
         const fetchGoldAmount = async () => {
             try {
                 const data = await getTotalGold();
                 setGoldAmount(data.total_capacity);
-                const gold_price_data = await getGoldPrice();
-                setGoldPrice(gold_price_data.price_in_silver)
+                const gold_price_data = await getExchangeRate();
+                setExchangeRate(gold_price_data.rate)
             } catch (error) {
                 setGoldAmount('Error fetching data');
                 setGoldPrice('Error fetching data');
@@ -29,8 +30,8 @@ const ProductList = () => {
                 <span>{goldAmount}</span>
             </div>
             <div className="amount">
-                <label>Gold price</label>
-                <span>{goldPrice}</span>
+                <label>Exchange Rate</label>
+                <span>{exchangeRate}</span>
             </div>
         </div>
     );
