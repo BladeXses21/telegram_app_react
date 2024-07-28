@@ -23,7 +23,8 @@ const Form = () => {
                     // Fetch silver amount after getting userId
                     const balanceData = await getUserBalance(data.uid);
                     const silverCurrency = balanceData.find(currency => currency.currency_name === 'Silver');
-                    setSilverAmount(silverCurrency ? silverCurrency.quantity : '0');
+                    const silverQuantity = silverCurrency ? parseInt(silverCurrency.quantity) : 0;
+                    setSilverAmount(silverQuantity);
                 } catch (error) {
                     console.error('Error fetching user data:', error);
                     setError(error.message);
