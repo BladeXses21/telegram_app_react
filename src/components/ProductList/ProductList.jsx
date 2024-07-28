@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
-import { fetchMarketData } from '../../api/user';
+import { fetchMarketData, buyGold, sellGold } from '../../api/user';
 import { useTelegram } from '../../hooks/useTelegram';
 
 const ProductList = () => {
@@ -8,6 +8,7 @@ const ProductList = () => {
     const [marketData, setMarketData] = useState(null);
     const [currentUserGold, setCurrentUserGold] = useState(0);
     const [currentUserSilver, setCurrentUserSilver] = useState(0);
+    const [goldAmount, setGoldAmount] = useState(0);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -34,10 +35,32 @@ const ProductList = () => {
         fetchMarketDataAsync();
     }, [tg]);
 
+    const handleBuyGold = async () => {
+        try {
+            const data = await buyGold(goldAmount);
+            setCurrentUserGold(data.newGoldAmount);
+            setCurrentUserSilver(data.newSilverAmount);
+            setMarketData(data.marketData);
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+    const handleSellGold = async () => {
+        try {
+            const data = await sellGold(goldAmount);
+            setCurrentUserGold(data.newGoldAmount);
+            setCurrentUserSilver(data.newSilverAmount);
+            setMarketData(data.marketData);
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
     return (
         <div className="product-list">
             <h1>Market Data</h1>
-            {error && <div>Error: {error}</div>}
+            {error && <div className="error">Error: {error}</div>}
             {marketData ? (
                 <div>
                     <div>
@@ -49,6 +72,15 @@ const ProductList = () => {
                         <h2>Your Gold: {currentUserGold}</h2>
                         <h2>Your Silver: {currentUserSilver}</h2>
                     </div>
+                    <div>
+                        <input
+                            type="number"
+                            value={goldAmount}
+                            onChange={(e) => setGoldAmount(Number(e.target.value))}
+                        />
+                        <button onClick={handleBuyGold}>Buy Gold</button>
+                        <button onClick={handleSellGold}>Sell Gold</button>
+                    </div>
                     <h2>All Users</h2>
                     <ul>
                         {marketData.users.map(user => (
@@ -59,7 +91,7 @@ const ProductList = () => {
                     </ul>
                 </div>
             ) : (
-                <div>Loading...</div>
+                <div className="loading">Loading...</div>
             )}
         </div>
     );

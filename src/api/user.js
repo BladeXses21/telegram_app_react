@@ -36,4 +36,22 @@ const fetchMarketData = async () => {
     }
 };
 
-export { getUserData, getUserBalance, fetchMarketData };
+const buyGold = async (goldAmount) => {
+    try {
+        const response = await axios.post(`${apiUrl}/api/buy-gold`, { userId: 1, goldAmount });
+        return response.data;
+    } catch (error) {
+        throw new Error('Error: ' + error.message);
+    }
+};
+
+const sellGold = async (goldAmount) => {
+    try {
+        const response = await axios.post(`${apiUrl}/api/sell-gold`, { userId: 1, goldAmount });
+        return response.data;
+    } catch (error) {
+        throw new Error('Error: ' + error.message);
+    }
+};
+
+export { getUserData, getUserBalance, fetchMarketData, buyGold, sellGold };
