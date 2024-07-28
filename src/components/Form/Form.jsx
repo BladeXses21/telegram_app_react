@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import './Form.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { getUserId, getUserBalance } from '../../api/user';
+import getUserData from '../../api/user';
 
 const Form = () => {
     const { tg } = useTelegram();
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
     const [userId, setUserId] = useState('Loading...');
-    const [silver, setSilver] = useState('Loading...');
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const telegramId = tg.initDataUnsafe?.user?.id;
-                const data = await getUserId(telegramId);
+                const data = await getUserData(513894647);
                 console.log('User data received:', data);
                 setUserId(data.uid);
-                const balance = await getUserBalance(telegramId);
-                setSilver(balance.balance);
             } catch (error) {
                 console.error('Error fetching user data:', error);
                 setError(error.message);
@@ -58,7 +54,7 @@ const Form = () => {
                 </div>
                 <div className="amount">
                     <label>Silver amount</label>
-                    <span>{silver}</span>
+                    <span>{userId}</span>
                 </div>
             </div>
             {error && <div className="error">Error: {error}</div>}
