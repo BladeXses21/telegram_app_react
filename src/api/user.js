@@ -25,35 +25,15 @@ const getUserBalance = async (userId) => {
     }
 };
 
-// Отримання загальної кількості золота в системі
 const getTotalGold = async () => {
-    const response = await axios.get(`${API_URL}/api/total-gold`);
-    return response.data;
+    try {
+        const response = await axios.get(`${apiUrl}/api/total-gold`);
+        console.log('Gold api response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error in Gold API call:', error);
+        throw new Error('Error: ' + error.message);
+    }
 };
 
-// Отримання кількості золота у користувача
-const getUserGold = async (userId) => {
-    const response = await axios.get(`${API_URL}/api/user-gold/${userId}`);
-    return response.data;
-};
-
-// Отримання кількості срібла у користувача
-const getUserSilver = async (userId) => {
-    const response = await axios.get(`${API_URL}/api/user-silver/${userId}`);
-    return response.data;
-};
-
-// Отримання списку всіх користувачів та їх статків
-const getUsersWealth = async () => {
-    const response = await axios.get(`${API_URL}/api/users-wealth`);
-    return response.data;
-};
-
-// Отримання поточної ціни золота за срібло
-const getCurrentGoldPrice = async () => {
-    const response = await axios.get(`${API_URL}/api/current-gold-price`);
-    return response.data;
-};
-
-
-export { getUserData, getUserBalance, getTotalGold, getUserGold, getUserSilver, getUsersWealth, getCurrentGoldPrice };
+export { getUserData, getUserBalance, getTotalGold };
