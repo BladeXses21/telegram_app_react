@@ -5,123 +5,90 @@ import { fetchMarketData, getUserData, getUserBalance, makeTransaction } from '.
 
 const ProductList = () => {
     const { tg, user } = useTelegram();
+    const [users, setUsers] = useState([]);
     const [goldAmount, setGoldAmount] = useState(0);
     const [silverPrice, setSilverPrice] = useState(0);
     const [silverAmount, setSilverAmount] = useState(0);
-    const [users, setUsers] = useState([]);
     const [buyGoldAmount, setBuyGoldAmount] = useState(0);
     const [sellGoldAmount, setSellGoldAmount] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const marketData = await fetchMarketData();
-                const userData = await getUserData(user.id);
-                const userBalance = await getUserBalance(user.id);
-
-                setGoldAmount(Number(marketData.goldAmount));
-                setSilverPrice(Number(marketData.silverPrice) || 1);
-                setSilverAmount(Number(userBalance.silver));  // Отримуємо баланс конкретного користувача
-                setUsers(marketData.users);
-            } catch (error) {
-                console.error('Error fetching market data:', error);
-            }
+            const marketData = await fetchMarketData();
+            setGoldAmount(marketData.goldAmount);
+            setSilverPrice(marketData.silverPrice);
+            setSilverAmount(marketData.silverAmount);
+            setUsers(marketData.users);
         };
-
         fetchData();
-    }, [user.id]);
+    }, []);
 
     const handleBuyGold = async () => {
-        if (buyGoldAmount <= 0) return;
         try {
-            const totalCost = buyGoldAmount * silverPrice;
-            if (totalCost <= silverAmount) {
-                await makeTransaction(user.id, buyGoldAmount, 'buy');
-                setGoldAmount(prevGoldAmount => prevGoldAmount + buyGoldAmount);
-                setSilverAmount(prevSilverAmount => prevSilverAmount - totalCost);
-            } else {
-                alert('Не вистачає срібла для покупки!');
-            }
+            await makeTransaction(user.id, buyGoldAmount, 'buy');
+            setBuyGoldAmount(0);
+            const marketData = await fetchMarketData();
+            setGoldAmount(marketData.goldAmount);
+            setSilverPrice(marketData.silverPrice);
+            setSilverAmount(marketData.silverAmount);
+            setUsers(marketData.users);
         } catch (error) {
             console.error('Error buying gold:', error);
         }
     };
 
     const handleSellGold = async () => {
-        if (sellGoldAmount <= 0) return;
         try {
-            const totalEarnings = sellGoldAmount * silverPrice;
-            if (sellGoldAmount <= goldAmount) {
-                await makeTransaction(user.id, sellGoldAmount, 'sell');
-                setGoldAmount(prevGoldAmount => prevGoldAmount - sellGoldAmount);
-                setSilverAmount(prevSilverAmount => prevSilverAmount + totalEarnings);
-            } else {
-                alert('Не вистачає золота для продажу!');
-            }
+            await makeTransaction(user.id, sellGoldAmount, 'sell');
+            setSellGoldAmount(0);
+            const marketData = await fetchMarketData();
+            setGoldAmount(marketData.goldAmount);
+            setSilverPrice(marketData.silverPrice);
+            setSilverAmount(marketData.silverAmount);
+            setUsers(marketData.users);
         } catch (error) {
             console.error('Error selling gold:', error);
         }
     };
 
     return (
-        <div className="gold-market">
-            <h2>Gold Market</h2>
-            <div className="market-summary">
-                <div>
-                    <h3>Current Gold Amount:</h3>
-                    <p>{goldAmount} Gold</p>
+        <div className="list">
+            <h1>Сторінка торгівлі</h1>
+            <div>
+                <div className="market-data">
+                    <h2>Ринкові дані</h2>
+                    <p>Золото в системі: {goldAmount}</p>
+                    <p>Срібло в системі: {silverAmount}</p>
+                    <p>Курс золота до срібла: {silverPrice}</p>
                 </div>
-                <div>
-                    <h3>Silver Price per Gold:</h3>
-                    <p>{silverPrice} Silver</p>
+                <div className="transaction-section">
+                    <div className="buy-section">
+                        <h3>Купити золото</h3>
+                        <input
+                            type="number"
+                            value={buyGoldAmount}
+                            onChange={(e) => setBuyGoldAmount(e.target.value)}
+                        />
+                        <button onClick={handleBuyGold}>Купити</button>
+                    </div>
+                    <div className="sell-section">
+                        <h3>Продати золото</h3>
+                        <input
+                            type="number"
+                            value={sellGoldAmount}
+                            onChange={(e) => setSellGoldAmount(e.target.value)}
+                        />
+                        <button onClick={handleSellGold}>Продати</button>
+                    </div>
                 </div>
-                <div>
-                    <h3>Current Silver Amount:</h3>
-                    <p>{silverAmount} Silver</p>
-                </div>
-            </div>
-            <div className="buy-sell">
-                <div>
-                    <h3>Buy Gold</h3>
-                    <input
-                        type="number"
-                        value={buyGoldAmount}
-                        onChange={(e) => setBuyGoldAmount(Number(e.target.value))}
-                        placeholder="Amount to buy"
-                    />
-                    <button onClick={handleBuyGold} disabled={buyGoldAmount <= 0}>Buy</button>
-                </div>
-                <div>
-                    <h3>Sell Gold</h3>
-                    <input
-                        type="number"
-                        value={sellGoldAmount}
-                        onChange={(e) => setSellGoldAmount(Number(e.target.value))}
-                        placeholder="Amount to sell"
-                    />
-                    <button onClick={handleSellGold} disabled={sellGoldAmount <= 0}>Sell</button>
-                </div>
-            </div>
-            <div className="user-list">
-                <h3>Users</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Gold</th>
-                            <th>Silver</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((user) => (
-                            <tr key={user.username}>
-                                <td>{user.username}</td>
-                                <td>{user.gold}</td>
-                                <td>{user.silver}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <h2>Інші користувачі</h2>
+                {users.map((user) => (
+                    <div key={user.username} className="user-card">
+                        <p>Ім'я: {user.username}</p>
+                        <p>Золото: {user.gold}</p>
+                        <p>Срібло: {user.silver}</p>
+                    </div>
+                ))}
             </div>
         </div>
     );
