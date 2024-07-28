@@ -3,26 +3,25 @@ import './ProductList.css';
 import { getTotalGold } from '../../api/user';
 
 const ProductList = () => {
-    const { tg } = useTelegram();
     const [goldAmount, setGoldAmount] = useState('Loading...');
 
     useEffect(() => {
         const fetchGoldAmount = async () => {
             try {
-                const gold = await getTotalGold();
-                setGoldAmount(gold);
+                const data = await getTotalGold();
+                setGoldAmount(data.total_capacity);
             } catch (error) {
-                setGoldAmount('Error loading gold amount');
+                setGoldAmount('Error fetching data');
             }
         };
 
         fetchGoldAmount();
-    }, [tg]);
+    }, []);
 
     return (
         <div className="store">
             <div className="amount">
-                <label>Gold amount:</label>
+                <label>Gold amount</label>
                 <span>{goldAmount}</span>
             </div>
         </div>
