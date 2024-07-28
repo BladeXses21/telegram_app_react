@@ -1,110 +1,93 @@
-import React, { useState, useEffect } from 'react';
-import './ProductList.css';
-import { fetchMarketData, buyGold, sellGold } from '../../api/user';
-import { useTelegram } from '../../hooks/useTelegram';
+import React, { useEffect, useState } from 'react';
+import {
+    getTotalGold,
+    getUserGold,
+    getUserSilver,
+    getUsersWealth,
+    getCurrentGoldPrice,
+} from '../../api/user';
 
 const ProductList = () => {
-    const { tg } = useTelegram();
-    const [marketData, setMarketData] = useState(null);
-    const [currentUserGold, setCurrentUserGold] = useState(0);
-    const [currentUserSilver, setCurrentUserSilver] = useState(0);
-    const [goldAmount, setGoldAmount] = useState(0);
-    const [error, setError] = useState(null);
+    const [totalGold, setTotalGold] = useState(0);
+    const [userGold, setUserGold] = useState(0);
+    const [userSilver, setUserSilver] = useState(0);
+    const [usersWealth, setUsersWealth] = useState([]);
+    const [currentGoldPrice, setCurrentGoldPrice] = useState(0);
+    const [amount, setAmount] = useState(0);
+    const [message, setMessage] = useState('');
+    const [userId, setUserId] = useState(null);
 
     useEffect(() => {
-        const fetchMarketDataAsync = async () => {
-            try {
-                const data = await fetchMarketData();
-                setMarketData(data);
+        const tg = window.Telegram.WebApp;
+        tg.ready();
 
-                // Отримання даних користувача
-                const user = tg.initDataUnsafe?.user;
-                if (user && user.id && data.users) {
-                    const currentUser = data.users.find(u => u.name === user.username);
-                    if (currentUser) {
-                        setCurrentUserGold(currentUser.goldAmount);
-                        setCurrentUserSilver(currentUser.silverAmount);
-                    }
-                }
+        setUserId(tg.initDataUnsafe.user.id);
+
+        const fetchData = async () => {
+            try {
+                const totalGoldData = await getTotalGold();
+                const userGoldData = await getUserGold(tg.initDataUnsafe.user.id);
+                const userSilverData = await getUserSilver(tg.initDataUnsafe.user.id);
+                const usersWealthData = await getUsersWealth();
+                const currentGoldPriceData = await getCurrentGoldPrice();
+
+                setTotalGold(totalGoldData.total_gold);
+                setUserGold(userGoldData.user_gold);
+                setUserSilver(userSilverData.user_silver);
+                setUsersWealth(usersWealthData);
+                setCurrentGoldPrice(currentGoldPriceData.gold_price);
             } catch (error) {
-                console.error('Error fetching market data:', error);
-                setError(error.message);
+                console.error('Error fetching data', error);
             }
         };
 
-        fetchMarketDataAsync();
-    }, [tg]);
+        if (tg.initDataUnsafe.user) {
+            fetchData();
+        }
+    }, []);
 
-    const handleBuyGold = async () => {
+    const handleBuy = async () => {
         try {
-            const user = tg.initDataUnsafe?.user;
-            if (!user) {
-                throw new Error('User not found');
-            }
-            console.log('Buying gold:', { userId: user.id, goldAmount }); // Logging
-            const data = await buyGold(user.id, goldAmount);
-            setCurrentUserGold(data.newGoldAmount);
-            setCurrentUserSilver(data.newSilverAmount);
-            setMarketData(data.marketData);
+            const response = await buyGold(userId, amount);
+            setMessage(response.message);
         } catch (error) {
-            console.error('Error buying gold:', error); // Logging error
-            setError(error.message);
+            setMessage('Failed to buy gold');
         }
     };
 
-    const handleSellGold = async () => {
+    const handleSell = async () => {
         try {
-            const user = tg.initDataUnsafe?.user;
-            if (!user) {
-                throw new Error('User not found');
-            }
-            console.log('Selling gold:', { userId: user.id, goldAmount }); // Logging
-            const data = await sellGold(user.id, goldAmount);
-            setCurrentUserGold(data.newGoldAmount);
-            setCurrentUserSilver(data.newSilverAmount);
-            setMarketData(data.marketData);
+            const response = await sellGold(userId, amount);
+            setMessage(response.message);
         } catch (error) {
-            console.error('Error selling gold:', error); // Logging error
-            setError(error.message);
+            setMessage('Failed to sell gold');
         }
     };
 
     return (
-        <div className="product-list">
-            <h1>Market Data</h1>
-            {error && <div className="error">Error: {error}</div>}
-            {marketData ? (
-                <div>
-                    <div>
-                        <h2>Total Gold in System: {marketData.goldAmount}</h2>
-                        <h2>Total Silver in System: {marketData.silverAmount}</h2>
-                        <h2>Gold to Silver Exchange Rate: {marketData.silverPrice}</h2>
-                    </div>
-                    <div>
-                        <h2>Your Gold: {currentUserGold}</h2>
-                        <h2>Your Silver: {currentUserSilver}</h2>
-                    </div>
-                    <div>
-                        <input
-                            type="number"
-                            value={goldAmount}
-                            onChange={(e) => setGoldAmount(Number(e.target.value))}
-                        />
-                        <button onClick={handleBuyGold}>Buy Gold</button>
-                        <button onClick={handleSellGold}>Sell Gold</button>
-                    </div>
-                    <h2>All Users</h2>
-                    <ul>
-                        {marketData.users.map(user => (
-                            <li key={user.id}>
-                                {user.name}: {user.goldAmount} Gold, {user.silverAmount} Silver
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            ) : (
-                <div className="loading">Loading...</div>
-            )}
+        <div>
+            <h2>Trade Gold</h2>
+            <p>Total Gold in System: {totalGold}</p>
+            <p>Your Gold: {userGold}</p>
+            <p>Your Silver: {userSilver}</p>
+            <p>Current Gold Price: {currentGoldPrice} Silver</p>
+            <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="Amount"
+            />
+            <button onClick={handleBuy}>Buy Gold</button>
+            <button onClick={handleSell}>Sell Gold</button>
+            {message && <p>{message}</p>}
+            <h3>Users Wealth</h3>
+            <ul>
+                {usersWealth.map((user) => (
+                    <li key={user.username}>
+                        {user.username}: {user.total_wealth} Silver
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };

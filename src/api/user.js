@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = 'https://be95-91-245-124-201.ngrok-free.app';
+const apiUrl = 'https://20be-91-245-124-201.ngrok-free.app';
 
 const getUserData = async (telegramUserId) => {
     try {
@@ -25,37 +25,35 @@ const getUserBalance = async (userId) => {
     }
 };
 
-const fetchMarketData = async () => {
-    try {
-        const response = await axios.get(`${apiUrl}/api/market-data`);
-        console.log('Market Data API response:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error in Market Data API call:', error);
-        throw new Error('Error: ' + error.message);
-    }
+// Отримання загальної кількості золота в системі
+const getTotalGold = async () => {
+    const response = await axios.get(`${API_URL}/api/total-gold`);
+    return response.data;
 };
 
-const buyGold = async (userId, goldAmount) => {
-    try {
-        const response = await axios.post(`${API_URL}/api/buy-gold`, { userId, goldAmount });
-        console.log('Buy gold response:', response.data); // Logging response
-        return response.data;
-    } catch (error) {
-        console.error('Error buying gold:', error); // Logging error
-        throw new Error(error.response?.data?.message || 'Failed to buy gold');
-    }
+// Отримання кількості золота у користувача
+const getUserGold = async (userId) => {
+    const response = await axios.get(`${API_URL}/api/user-gold/${userId}`);
+    return response.data;
 };
 
-const sellGold = async (userId, goldAmount) => {
-    try {
-        const response = await axios.post(`${API_URL}/api/sell-gold`, { userId, goldAmount });
-        console.log('Sell gold response:', response.data); // Logging response
-        return response.data;
-    } catch (error) {
-        console.error('Error selling gold:', error); // Logging error
-        throw new Error(error.response?.data?.message || 'Failed to sell gold');
-    }
+// Отримання кількості срібла у користувача
+const getUserSilver = async (userId) => {
+    const response = await axios.get(`${API_URL}/api/user-silver/${userId}`);
+    return response.data;
 };
 
-export { getUserData, getUserBalance, fetchMarketData, buyGold, sellGold };
+// Отримання списку всіх користувачів та їх статків
+const getUsersWealth = async () => {
+    const response = await axios.get(`${API_URL}/api/users-wealth`);
+    return response.data;
+};
+
+// Отримання поточної ціни золота за срібло
+const getCurrentGoldPrice = async () => {
+    const response = await axios.get(`${API_URL}/api/current-gold-price`);
+    return response.data;
+};
+
+
+export { getUserData, getUserBalance, getTotalGold, getUserGold, getUserSilver, getUsersWealth, getCurrentGoldPrice };
