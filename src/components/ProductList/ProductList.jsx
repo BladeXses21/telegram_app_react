@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import axios from 'axios';
+import { fetchMarketData, makeTransaction } from '../../api/user';
 
 const ProductList = () => {
-    const apiUrl = 'https://33ea-91-245-124-201.ngrok-free.app';
     const { tg, user } = useTelegram();
     const [goldAmount, setGoldAmount] = useState(0);
     const [silverPrice, setSilverPrice] = useState(0);
@@ -16,11 +15,11 @@ const ProductList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${apiUrl}/api/market-data`);
-                setGoldAmount(response.data.goldAmount);
-                setSilverPrice(response.data.silverPrice);
-                setSilverAmount(response.data.silverAmount);
-                setUsers(response.data.users);
+                const marketData = await fetchMarketData();
+                setGoldAmount(marketData.goldAmount);
+                setSilverPrice(marketData.silverPrice);
+                setSilverAmount(marketData.silverAmount);
+                setUsers(marketData.users);
             } catch (error) {
                 console.error('Error fetching market data:', error);
             }
@@ -34,11 +33,7 @@ const ProductList = () => {
         try {
             const totalCost = buyGoldAmount * silverPrice;
             if (totalCost <= silverAmount) {
-                await axios.post(`${apiUrl}/api/transaction`, {
-                    userId: user.id,
-                    amount: buyGoldAmount,
-                    transactionType: 'buy'
-                });
+                await makeTransaction(user.id, buyGoldAmount, 'buy');
                 setGoldAmount(goldAmount + buyGoldAmount);
                 setSilverAmount(silverAmount - totalCost);
             } else {
@@ -54,11 +49,7 @@ const ProductList = () => {
         try {
             const totalEarnings = sellGoldAmount * silverPrice;
             if (sellGoldAmount <= goldAmount) {
-                await axios.post(`${apiUrl}/api/transaction`, {
-                    userId: user.id,
-                    amount: sellGoldAmount,
-                    transactionType: 'sell'
-                });
+                await makeTransaction(user.id, sellGoldAmount, 'sell');
                 setGoldAmount(goldAmount - sellGoldAmount);
                 setSilverAmount(silverAmount + totalEarnings);
             } else {

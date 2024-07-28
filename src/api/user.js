@@ -25,14 +25,27 @@ const getUserBalance = async (userId) => {
     }
 };
 
-const buyOrSellGoldCoin = async (userId, amount, transactionType) => {
+const fetchMarketData = async () => {
     try {
-        const response = await axios.post(`${apiUrl}/api/transaction`, { userId, amount, transactionType });
+        const response = await axios.get(`${apiUrl}/market-data`);
         return response.data;
     } catch (error) {
-        console.error(`Error ${transactionType}ing gold coin:`, error);
+        console.error('Error fetching market data:', error);
         throw error;
     }
 };
 
-export { getUserData, getUserBalance, buyOrSellGoldCoin };
+const makeTransaction = async (userId, amount, transactionType) => {
+    try {
+        await axios.post(`${apiUrl}/transaction`, {
+            userId,
+            amount,
+            transactionType
+        });
+    } catch (error) {
+        console.error('Error making transaction:', error);
+        throw error;
+    }
+};
+
+export { getUserData, getUserBalance, fetchMarketData, makeTransaction };
