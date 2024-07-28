@@ -13,7 +13,7 @@ const Form = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const telegramId = tg.initDataUnsafe?.user.id;
+                const telegramId = tg.initDataUnsafe?.user?.id;
                 const data = await getUserId(telegramId);
                 console.log('User data received:', data);
                 setUserId(data.uid);
