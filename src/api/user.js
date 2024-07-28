@@ -26,13 +26,13 @@ const getUserBalance = async (userId) => {
 };
 
 const fetchMarketData = async () => {
-    const response = await fetch(`${API_BASE_URL}/market-data`);
+    const response = await fetch(`${apiUrl}/market-data`);
     const data = await response.json();
     return data;
 };
 
 const makeTransaction = async (userId, amount, transactionType) => {
-    const response = await fetch(`${API_BASE_URL}/transaction`, {
+    const response = await fetch(`${apiUrl}/transaction`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
