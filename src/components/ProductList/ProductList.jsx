@@ -4,7 +4,7 @@ import { useTelegram } from '../../hooks/useTelegram';
 import axios from 'axios';
 
 const ProductList = () => {
-    const apiUrl = 'http://localhost:8080';
+    const apiUrl = 'https://33ea-91-245-124-201.ngrok-free.app';
     const { tg, user } = useTelegram();
     const [goldAmount, setGoldAmount] = useState(0);
     const [silverPrice, setSilverPrice] = useState(0);
