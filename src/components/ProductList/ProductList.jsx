@@ -3,6 +3,7 @@ import './ProductList.css';
 import { getTotalGold } from '../../api/user';
 
 const ProductList = () => {
+    const { tg } = useTelegram();
     const [goldAmount, setGoldAmount] = useState('Loading...');
 
     useEffect(() => {
@@ -16,7 +17,7 @@ const ProductList = () => {
         };
 
         fetchGoldAmount();
-    }, []);
+    }, [tg]);
 
     return (
         <div className="store">
