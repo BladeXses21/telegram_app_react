@@ -27,7 +27,7 @@ const getUserBalance = async (userId) => {
 
 const fetchMarketData = async () => {
     try {
-        const response = await axios.get(`${apiUrl}/market-data`);
+        const response = await axios.get(`${apiUrl}/api/market-data`);
         return response.data;
     } catch (error) {
         console.error('Error fetching market data:', error);
@@ -37,7 +37,7 @@ const fetchMarketData = async () => {
 
 const makeTransaction = async (userId, amount, transactionType) => {
     try {
-        await axios.post(`${apiUrl}/transaction`, {
+        await axios.post(`${apiUrl}/api/transaction`, {
             userId,
             amount,
             transactionType
