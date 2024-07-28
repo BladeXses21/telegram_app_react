@@ -14,4 +14,15 @@ const getUserData = async (telegramUserId) => {
     }
 };
 
-export default getUserData;
+const getUserBalance = async (userId) => {
+    try {
+        const response = await axios.get(`${apiUrl}/api/user/${userId}/balance`);
+        console.log('Balance API response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error in Balance API call:', error);
+        throw new Error('Error: ' + error.message);
+    }
+};
+
+export { getUserData, getUserBalance };

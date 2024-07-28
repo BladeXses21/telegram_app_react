@@ -1,37 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import './Form.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import getUserData from '../../api/user';
+import { getUserData, getUserBalance } from '../../api/user';
 
 const Form = () => {
     const { tg } = useTelegram();
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
     const [userId, setUserId] = useState('Loading...');
+    const [silverAmount, setSilverAmount] = useState('Loading...');
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchUserData = async () => {
-            try {
-                const data = await getUserData(513894647);
-                console.log('User data received:', data);
-                setUserId(data.uid);
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-                setError(error.message);
+            const user = tg.initDataUnsafe?.user;
+            if (user && user.id) {
+                const telegramId = user.id;
+                try {
+                    const data = await getUserData(telegramId);
+                    console.log('User data received:', data);
+                    setUserId(data.uid);
+
+                    // Fetch silver amount after getting userId
+                    const balanceData = await getUserBalance(data.uid);
+                    const silverCurrency = balanceData.find(currency => currency.currency_name === 'Silver');
+                    setSilverAmount(silverCurrency ? silverCurrency.quantity : '0');
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                    setError(error.message);
+                    setUserId('Error');
+                    setSilverAmount('Error');
+                }
+
+                if (user.photo_url) {
+                    setProfilePhotoUrl(user.photo_url);
+                }
+            } else {
+                setProfilePhotoUrl('https://via.placeholder.com/150');
                 setUserId('Error');
+                setSilverAmount('Error');
             }
         };
 
         fetchUserData();
-    }, []);
-
-    useEffect(() => {
-        const user = tg.initDataUnsafe?.user;
-        if (user && user.photo_url) {
-            setProfilePhotoUrl(user.photo_url);
-        } else {
-            setProfilePhotoUrl('https://via.placeholder.com/150');
-        }
     }, [tg]);
 
     const username = tg.initDataUnsafe?.user?.username || 'Username not available';
@@ -54,7 +64,7 @@ const Form = () => {
                 </div>
                 <div className="amount">
                     <label>Silver amount</label>
-                    <span>{userId}</span>
+                    <span>{silverAmount}</span>
                 </div>
             </div>
             {error && <div className="error">Error: {error}</div>}
