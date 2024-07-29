@@ -68,7 +68,8 @@ const ProductList = () => {
             const user = tg.initDataUnsafe?.user;
             if (user && user.id) {
                 const userUid = user.id;
-                const result = await buyGold(userUid, userBaseRate);
+                amount = userBaseRate
+                const result = await buyGold(userUid, amount);
                 if (result.success) {
                     await fetchGoldAmount();
                 }
@@ -78,7 +79,7 @@ const ProductList = () => {
             }
         } catch (error) {
             console.log('Error buying gold:', error);
-            alert(`Error buying gold: {error}`)
+            alert(`Error buying gold`)
         }
     };
 
@@ -91,7 +92,7 @@ const ProductList = () => {
             alert('Exchange rate successfully updated')
         } catch (error) {
             console.log('Error update exchange rate:', error)
-            alert(`Error update exchange rate: {error}`)
+            alert(`Error update exchange rate`)
         }
     };
 
