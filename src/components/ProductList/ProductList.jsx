@@ -76,7 +76,7 @@ const ProductList = () => {
             alert(`Successfully purchased. {userId, userBaseRate}`)
         } catch (error) {
             console.log('Error buying gold:', error);
-            alert(`Error buying gold`)
+            alert(`Error buying gold {userId, userBaseRate}`)
         }
     };
 
