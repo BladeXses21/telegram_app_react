@@ -23,7 +23,7 @@ const ProductList = () => {
                     // Отримання id користувача в бд
                     const data = await getUserData(telegramId);
                     setUserId(data.id);
-
+                    alert($`userId`)
                     const totalGoldData = await getTotalGold();
                     const currencyGoldData = await getCurrencyGold();
                     const exchangeRateData = await getExchangeRate();
