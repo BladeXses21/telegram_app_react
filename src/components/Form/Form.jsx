@@ -5,7 +5,7 @@ import { getUserData, getUserBalance } from '../../api/user';
 
 const Form = () => {
     const { tg } = useTelegram();
-    const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
+    const [profilePhotoUrl, setProfilePhotoUrl] = useState('Loading...');
     const [userId, setUserId] = useState('Loading...');
     const [silverAmount, setSilverAmount] = useState('Loading...');
     const [error, setError] = useState(null);
