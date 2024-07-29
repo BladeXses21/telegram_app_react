@@ -59,7 +59,7 @@ const ProductList = () => {
             }
         }
         fetchGoldAmount();
-    }, [userBaseRate, tg]);
+    }, [userBaseRate, tg, exchangeRate]);
 
     const handleSellOrBuyChange = (event) => {
         const user_input = parseFloat(event.target.value);
@@ -86,9 +86,7 @@ const ProductList = () => {
     const handleUpdateExchangeRate = async () => {
         try {
             const result = await updateExchangeRate(exchangeRate);
-            if (result.success) {
-                await fetchGoldAmount();
-            }
+            await fetchGoldAmount();
             alert('Exchange rate successfully updated')
         } catch (error) {
             console.log('Error update exchange rate:', error)
