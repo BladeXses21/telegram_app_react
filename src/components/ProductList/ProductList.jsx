@@ -96,7 +96,6 @@ const ProductList = () => {
     };
 
     const handleSellGold = () => {
-        console.log('Sell gold clicked with amount:', amountToSell);
         alert(`${userId} ${userBaseRate}`)
         // логіку продажу золота тут
     };
