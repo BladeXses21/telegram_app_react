@@ -47,9 +47,9 @@ const Form = () => {
 
     const username = tg.initDataUnsafe?.user?.username || 'Username not available';
 
-    return (
+return (
         <div className="form">
-            <h3>Ur data</h3>
+            <h3>Your Data</h3>
             <div className="profile-info">
                 <img src={profilePhotoUrl} alt="Profile" className="profile-photo" onError={(e) => e.target.src = 'https://via.placeholder.com/150'} />
                 <span className="username">{username}</span>
@@ -60,11 +60,11 @@ const Form = () => {
                     <span>0</span>
                 </div>
                 <div className="amount">
-                    <label>Gold amount</label>
+                    <label>Gold Amount</label>
                     <span>0</span>
                 </div>
                 <div className="amount">
-                    <label>Silver amount</label>
+                    <label>Silver Amount</label>
                     <span>{silverAmount}</span>
                 </div>
             </div>
