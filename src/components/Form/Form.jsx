@@ -32,17 +32,15 @@ const Form = () => {
                     setUserId('Error');
                     setSilverAmount('Error');
                 }
-
-                if (user.photo_url) {
-                    setProfilePhotoUrl(user.photo_url);
-                }
             } else {
                 setProfilePhotoUrl('https://via.placeholder.com/150');
                 setUserId('Error');
                 setSilverAmount('Error');
             }
+            if (user.photo_url) {
+                setProfilePhotoUrl(user.photo_url);
+            }
         };
-
         fetchUserData();
     }, [tg]);
 
