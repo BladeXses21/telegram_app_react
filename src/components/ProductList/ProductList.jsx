@@ -60,17 +60,17 @@ const ProductList = () => {
         fetchGoldAmount();
     }, [userBaseRate, tg, exchangeRate]);
 
+    const handleButtonClick = async () => {
+        handleBuyGold();
+        handleUpdateExchangeRate();
+        handleSellOrBuyChange();
+    };
+
     const handleSellOrBuyChange = (event) => {
         const user_input = parseFloat(event.target.value);
         if (!isNaN(user_input)) {
             setUserBaseRate(user_input);
         }
-    };
-
-    const handleButtonClick = async () => {
-        handleBuyGold();
-        handleUpdateExchangeRate();
-        fetchGoldAmount();
     };
 
     const handleBuyGold = async () => {
