@@ -16,6 +16,7 @@ const Form = () => {
             if (user && user.id) {
                 const telegramId = user.id;
                 try {
+                    // Отримання id користувача в бд
                     const data = await getUserData(telegramId);
                     console.log('User data received:', data);
                     setUserId(data.uid);

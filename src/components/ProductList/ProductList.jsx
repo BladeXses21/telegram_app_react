@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { getTotalGold, getExchangeRate, getCurrencyGold, updateExchangeRate, buyGold } from '../../api/user';
+import { getUserData, getTotalGold, getExchangeRate, getCurrencyGold, updateExchangeRate, buyGold } from '../../api/user';
 
 const ProductList = () => {
     const { tg } = useTelegram();
@@ -20,7 +20,10 @@ const ProductList = () => {
             if (user && user.id) {
                 const telegramId = user.id;
                 try {
-                    setUserId(telegramId);
+                    // Отримання id користувача в бд
+                    const data = await getUserData(telegramId)
+                    setUserId(data.id
+                    )
                     const totalGoldData = await getTotalGold();
                     const currencyGoldData = await getCurrencyGold();
                     const exchangeRateData = await getExchangeRate();
