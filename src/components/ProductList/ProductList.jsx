@@ -11,7 +11,7 @@ const ProductList = () => {
     const [goldPrice, setGoldPrice] = useState('Loading...');
     const [userBaseRate, setUserBaseRate] = useState(1);
     const [sellPriceInSilver, setSellPriceInSilver] = useState('Loading...');
-    const [userId, setUserId] = useState(0);
+    const [userId, setUserId] = useState('Loading...');
 
 
     useEffect(() => {
@@ -23,6 +23,7 @@ const ProductList = () => {
                     // Отримання id користувача в бд
                     const data = await getUserData(telegramId);
                     setUserId(data.id);
+
                     const totalGoldData = await getTotalGold();
                     const currencyGoldData = await getCurrencyGold();
                     const exchangeRateData = await getExchangeRate();
