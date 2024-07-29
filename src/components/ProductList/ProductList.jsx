@@ -13,7 +13,6 @@ const ProductList = () => {
     const [sellPriceInSilver, setSellPriceInSilver] = useState('Loading...');
     const [userId, setUserId] = useState('Loading...');
 
-
     useEffect(() => {
         const fetchGoldAmount = async () => {
             const user = tg.initDataUnsafe?.user;
@@ -71,7 +70,7 @@ const ProductList = () => {
     const handleButtonClick = async () => {
         handleBuyGold();
         handleUpdateExchangeRate();
-        await fetchGoldAmount();
+        fetchGoldAmount();
     };
 
     const handleBuyGold = async () => {
