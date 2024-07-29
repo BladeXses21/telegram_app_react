@@ -73,9 +73,6 @@ const ProductList = () => {
     const handleBuyGold = async () => {
         try {
             const result = await buyGold(userId, userBaseRate);
-            if (result.success) {
-                await fetchGoldAmount();
-            }
             alert('Successfully purchased.')
         } catch (error) {
             console.log('Error buying gold:', error);
