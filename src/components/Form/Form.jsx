@@ -40,10 +40,10 @@ const Form = () => {
                 setSilverAmount('Error');
             }
 
-            if (user?.photo_url) {
+            if (user && user?.photo_url) {
                 setProfilePhotoUrl(user.photo_url);
             } else {
-                console.log('No photo_url available');
+                setProfilePhotoUrl("No photo_url available");
             }
         };
         fetchUserData();
