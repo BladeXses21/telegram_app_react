@@ -71,7 +71,7 @@ const updateExchangeRate = async (newRate) => {
 
 const buyGold = async (userUid, amount) => {
     try {
-        const response = await axios.post(`${apiUrl}/api/buy-gold`, { userUid, amount });
+        const response = await axios.post(`${apiUrl}/api/buy-gold`, { userUid: userUid, amount: amount });
         console.log('Buy Gold API response:', response.data);
         return response.data;
     } catch (error) {
