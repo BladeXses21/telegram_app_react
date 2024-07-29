@@ -12,6 +12,7 @@ const ProductList = () => {
     const [userBaseRate, setUserBaseRate] = useState(1);
     const [sellPriceInSilver, setSellPriceInSilver] = useState('Loading...');
     const [userId, setUserId] = useState('Loading...');
+    const [reload, setReload] = useState(false);
 
     useEffect(() => {
         const fetchGoldAmount = async () => {
@@ -57,14 +58,16 @@ const ProductList = () => {
                 setUserId('Error');
             }
         }
+        setReload(false);
         fetchGoldAmount();
-    }, [userBaseRate, tg, exchangeRate]);
+    }, [userBaseRate, tg, reload]);
 
     const handleButtonClick = async () => {
         handleBuyGold();
         handleUpdateExchangeRate();
-        handleSellOrBuyChange();
+        setReload(true); // refresh page 
     };
+
 
     const handleSellOrBuyChange = (event) => {
         const user_input = parseFloat(event.target.value);
