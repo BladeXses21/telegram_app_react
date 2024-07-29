@@ -73,7 +73,6 @@ const ProductList = () => {
     }
 
     const handleBuyGold = async () => {
-        alert($`{userId}`)
         try {
             const result = await buyGold(userId, userBaseRate);
             alert(`Successfully purchased. ${userId} ${userBaseRate}`)
@@ -98,6 +97,7 @@ const ProductList = () => {
 
     const handleSellGold = () => {
         console.log('Sell gold clicked with amount:', amountToSell);
+        alert(`${userId} ${userBaseRate}`)
         // логіку продажу золота тут
     };
 
@@ -138,7 +138,7 @@ const ProductList = () => {
                     Buy Gold
                 </button>
                 <button onClick={handleSellGold} className="sell-button">
-                    Buy Gold
+                    Sell Gold
                 </button>
             </div>
         </div>
