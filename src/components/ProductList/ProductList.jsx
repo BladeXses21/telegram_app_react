@@ -21,9 +21,8 @@ const ProductList = () => {
                 const telegramId = user.id;
                 try {
                     // Отримання id користувача в бд
-                    const data = await getUserData(telegramId)
-                    setUserId(data.id
-                    )
+                    const data = await getUserData(telegramId);
+                    setUserId(data.id);
                     const totalGoldData = await getTotalGold();
                     const currencyGoldData = await getCurrencyGold();
                     const exchangeRateData = await getExchangeRate();
