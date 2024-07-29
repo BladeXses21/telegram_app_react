@@ -68,10 +68,11 @@ const ProductList = () => {
         }
     };
 
-    const handleButtonClick = () => {
+    const handleButtonClick = async () => {
         handleBuyGold();
         handleUpdateExchangeRate();
-    }
+        await fetchGoldAmount();
+    };
 
     const handleBuyGold = async () => {
         try {
@@ -85,8 +86,7 @@ const ProductList = () => {
 
     const handleUpdateExchangeRate = async () => {
         try {
-            const result = await updateExchangeRate(exchangeRate);
-            await fetchGoldAmount();
+            const result = await updateExchangeRate(goldPrice);
             alert('Exchange rate successfully updated')
         } catch (error) {
             console.log('Error update exchange rate:', error)
