@@ -73,10 +73,10 @@ const ProductList = () => {
     const handleBuyGold = async () => {
         try {
             const result = await buyGold(userId, userBaseRate);
-            alert(`Successfully purchased. {userId, userBaseRate}`)
+            alert(`Successfully purchased. ${userId} ${userBaseRate}`)
         } catch (error) {
             console.log('Error buying gold:', error);
-            alert(`Error buying gold {userId, userBaseRate}`)
+            alert(`Error buying gold ${userId} ${userBaseRate}`)
         }
     };
 
