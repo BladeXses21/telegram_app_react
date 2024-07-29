@@ -58,7 +58,7 @@ const ProductList = () => {
             }
         }
         fetchGoldAmount();
-    }, [userBaseRate]);
+    }, [userBaseRate, tg]);
 
     const handleSellOrBuyChange = (event) => {
         const user_input = parseFloat(event.target.value);
