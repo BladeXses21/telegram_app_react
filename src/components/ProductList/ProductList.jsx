@@ -78,7 +78,7 @@ const ProductList = () => {
             }
         } catch (error) {
             console.log('Error buying gold:', error);
-            alert('Error buying gold:', error)
+            alert(`Error buying gold: {error}`)
         }
     };
 
@@ -91,7 +91,7 @@ const ProductList = () => {
             alert('Exchange rate successfully updated')
         } catch (error) {
             console.log('Error update exchange rate:', error)
-            alert('Error update exchange rate:', error)
+            alert(`Error update exchange rate: {error}`)
         }
     };
 
