@@ -13,6 +13,8 @@ const Form = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             const user = tg.initDataUnsafe?.user;
+            console.log('Telegram user data:', user);
+
             if (user && user.id) {
                 const telegramId = user.id;
                 try {
@@ -37,8 +39,11 @@ const Form = () => {
                 setUserId('Error');
                 setSilverAmount('Error');
             }
-            if (user.photo_url) {
+
+            if (user?.photo_url) {
                 setProfilePhotoUrl(user.photo_url);
+            } else {
+                console.log('No photo_url available');
             }
         };
         fetchUserData();
@@ -47,15 +52,19 @@ const Form = () => {
     const username = tg.initDataUnsafe?.user?.username || 'Username not available';
 
     const sayImgUrl = () => {
-        alert(`${profilePhotoUrl}`)
+        alert(profilePhotoUrl);
     };
 
-
-return (
+    return (
         <div className="form">
             <h3>Your Data</h3>
             <div className="profile-info">
-                <img src={profilePhotoUrl} alt="Profile" className="profile-photo" onError={(e) => e.target.src = 'https://via.placeholder.com/150'} />
+                <img
+                    src={profilePhotoUrl}
+                    alt="Profile"
+                    className="profile-photo"
+                    onError={(e) => e.target.src = 'https://via.placeholder.com/150'}
+                />
                 <span className="username">{username}</span>
             </div>
             <div className="amounts">
@@ -72,7 +81,7 @@ return (
                     <span>{silverAmount}</span>
                 </div>
                 <div>
-                    <button onClick={sayImgUrl} >
+                    <button onClick={sayImgUrl}>
                         say img url
                     </button>
                 </div>
