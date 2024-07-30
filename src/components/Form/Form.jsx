@@ -14,10 +14,10 @@ const Form = () => {
         const fetchUserData = async () => {
             const user = tg.initDataUnsafe?.user;
             console.log('Telegram user data:', user);
-            setProfilePhotoUrl(user.photo_url);
             if (user && user.id) {
                 const telegramId = user.id;
                 try {
+                    setProfilePhotoUrl(user.photo_url);
                     // Отримання id користувача в бд
                     const data = await getUserData(telegramId);
                     console.log('User data received:', data);
