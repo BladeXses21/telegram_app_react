@@ -58,10 +58,6 @@ const Form = () => {
 
     const username = tg.initDataUnsafe?.user?.username || 'Username not available';
 
-    const sayImgUrl = () => {
-        alert(Object.keys(tg.initDataUnsafe?.user));
-    };
-
     return (
         <div className="form">
             <h3>Your Data</h3>
@@ -81,16 +77,11 @@ const Form = () => {
                 </div>
                 <div className="amount">
                     <label>Gold Amount</label>
-                    <span>{goldAmount.toFixed(2)}</span>
+                    <span>{goldAmount}</span>
                 </div>
                 <div className="amount">
                     <label>Silver Amount</label>
-                    <span>{silverAmount.toFixed(2)}</span>
-                </div>
-                <div>
-                    <button onClick={sayImgUrl}>
-                        say img url
-                    </button>
+                    <span>{silverAmount}</span>
                 </div>
             </div>
             {error && <div className="error">Error: {error}</div>}
