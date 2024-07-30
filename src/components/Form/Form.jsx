@@ -14,7 +14,7 @@ const Form = () => {
         const fetchUserData = async () => {
             const user = tg.initDataUnsafe?.user;
             console.log('Telegram user data:', user);
-
+            setProfilePhotoUrl(user.photo_url);
             if (user && user.id) {
                 const telegramId = user.id;
                 try {
@@ -38,12 +38,6 @@ const Form = () => {
                 setProfilePhotoUrl('https://via.placeholder.com/150');
                 setUserId('Error');
                 setSilverAmount('Error');
-            }
-
-            if (user && user?.photo_url) {
-                setProfilePhotoUrl(user.photo_url);
-            } else {
-                setProfilePhotoUrl("No photo_url available");
             }
         };
         fetchUserData();
