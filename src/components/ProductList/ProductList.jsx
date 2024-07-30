@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { getUserData, getTotalGold, getUsers, getExchangeRate, getCurrencyGold, updateExchangeRate, buyGold, sellGold } from '../../api/user';
+import { getUserData, getTotalGold, fetchUsers, fetchUserBalance, getExchangeRate, getCurrencyGold, updateExchangeRate, buyGold, sellGold } from '../../api/user';
 
 const ProductList = () => {
     const { tg } = useTelegram();
@@ -14,6 +14,7 @@ const ProductList = () => {
     const [userId, setUserId] = useState('Loading...');
     const [reload, setReload] = useState(false);
     const [users, setUsers] = useState([]);
+    const [balances, setBalances] = useState({});
 
     useEffect(() => {
         const fetchGoldAmount = async () => {
@@ -21,6 +22,17 @@ const ProductList = () => {
             if (user && user.id) {
                 const telegramId = user.id;
                 try {
+                    // fetch users
+                    const userData = await fetchUsers();
+                    setUsers(userData);
+
+                    const balancesData = {};
+                    for (const user of usersData) {
+                        const balance = await fetchUserBalance(user.uid);
+                        balancesData[user.uid] = balance;
+                    }
+                    setBalances(balancesData);
+
                     // Отримання id користувача в бд
                     const data = await getUserData(telegramId);
                     setUserId(data.uid);
@@ -33,8 +45,6 @@ const ProductList = () => {
                     const currencyGold = parseFloat(currencyGoldData.currency_capacity);
                     const rate = parseFloat(exchangeRateData.rate);
 
-                    const usersData = await getUsers();
-
                     if (isNaN(totalGold) || isNaN(currencyGold) || isNaN(rate)) {
                         throw new Error('Invalid data');
                     }
@@ -42,7 +52,6 @@ const ProductList = () => {
                     const calculatedPrice = rate + 0.000000000001 * (totalGold / userBaseRate)
                     setGoldPrice(calculatedPrice.toFixed(8)); // Округлюємо до 2 знаків після коми
 
-                    setUsers(usersData);
                     setGoldAmount(totalGold);
                     setCurrencyGoldAmount(currencyGold);
                     setExchangeRate(rate.toFixed(8));
@@ -159,11 +168,16 @@ const ProductList = () => {
                 <h2>User Balances</h2>
                 <ul>
                     {users.map((user) => (
-                        <li key={user.id}>
-                            <span>{user.name}</span>
-                            <span>Gold: {user.gold_balance}</span>
-                            <span>Silver: {user.silver_balance}</span>
-                        </li>
+                        <div key={user.uid} className="user-item">
+                            <h3>{user.username}</h3>
+                            <ul>
+                                {balances[user.uid] && balances[user.uid].map(balance => (
+                                    <li key={balance.currency_name}>
+                                        {balance.currency_name}: {balance.quantity}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     ))}
                 </ul>
             </div>
