@@ -5,7 +5,7 @@ import { getUserData, getUserBalance } from '../../api/user';
 
 const Form = () => {
     const { tg } = useTelegram();
-    const [profilePhotoUrl, setProfilePhotoUrl] = useState('Loading...');
+    const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
     const [userId, setUserId] = useState('Loading...');
     const [silverAmount, setSilverAmount] = useState('Loading...');
     const [error, setError] = useState(null);
@@ -17,7 +17,6 @@ const Form = () => {
             if (user && user.id) {
                 const telegramId = user.id;
                 try {
-                    setProfilePhotoUrl(user.photo_url);
                     // Отримання id користувача в бд
                     const data = await getUserData(telegramId);
                     console.log('User data received:', data);
@@ -46,7 +45,7 @@ const Form = () => {
     const username = tg.initDataUnsafe?.user?.username || 'Username not available';
 
     const sayImgUrl = () => {
-        alert(profilePhotoUrl);
+        alert(tg.initDataUnsafe?.user);
     };
 
     return (
