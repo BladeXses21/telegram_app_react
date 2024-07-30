@@ -1,117 +1,97 @@
-.product-list-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.container {
+    font-family: 'Roboto', sans-serif;
+    padding: 16px;
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .info-container {
-    width: 100%;
-    max-width: 600px;
     margin-bottom: 20px;
 }
 
 .amount {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background: #ffffff;
-    border-radius: 8px;
     margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .amount label {
+    display: block;
     font-weight: bold;
 }
 
 .amount span {
+    display: block;
     font-size: 16px;
-    color: #333;
+    color: #555;
 }
 
 .input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 600px;
+    margin-bottom: 20px;
 }
 
 .input-container label {
-    margin-bottom: 10px;
+    display: block;
     font-weight: bold;
+    margin-bottom: 8px;
 }
 
 .input-container input {
+    width: 100%;
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
     border-radius: 4px;
+}
+
+.buy-button, .sell-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
     margin-right: 10px;
 }
 
 .buy-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
+    background-color: #4CAF50;
+    color: white;
 }
 
 .sell-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: red;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.buy-button:hover {
-    background-color: #0056b3;
+    background-color: #f44336;
+    color: white;
 }
 
 .user-list {
-    width: 100%;
-    max-width: 600px;
     margin-top: 20px;
 }
 
-.user-list h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
 .user-list ul {
-    list-style: none;
+    list-style-type: none;
     padding: 0;
 }
 
-.user-list li {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
+.user-item {
     border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 10px;
     margin-bottom: 10px;
-    background-color: #f9f9f9;
+    border-radius: 4px;
+    background-color: #fff;
 }
 
-.user-list li span {
-    flex: 1;
+.user-item h3 {
+    margin: 0;
+    font-size: 18px;
 }
 
-.user-list li span:first-child {
-    font-weight: bold;
+.user-item ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.user-item li {
+    padding: 5px 0;
 }
