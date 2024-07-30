@@ -45,7 +45,7 @@ const Form = () => {
     const username = tg.initDataUnsafe?.user?.username || 'Username not available';
 
     const sayImgUrl = () => {
-        alert(tg.initDataUnsafe?.user);
+        alert(Object.keys(tg.initDataUnsafe?.user));
     };
 
     return (
