@@ -35,7 +35,7 @@ const Form = () => {
 
                     // Обчислення еквівалент золота до срібла
                     const exchangeRateData = await getExchangeRate();
-                    setExchangeRate(exchangeRateData);
+                    setExchangeRate(exchangeRateData.rate);
                 } catch (error) {
                     console.error('Error fetching user data:', error);
                     setError(error.message);
