@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './Form.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { getUserData, getUserBalance } from '../../api/user';
+import { getUserData, getUserBalance, getExchangeRate } from '../../api/user';
 
 const Form = () => {
     const { tg } = useTelegram();
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('https://via.placeholder.com/150');
     const [userId, setUserId] = useState('Loading...');
     const [silverAmount, setSilverAmount] = useState('Loading...');
+    const [goldAmount, setGoldAmount] = useState('Loading...');
+    const [exchangeRate, setExchangeRate] = useState('Loading...');
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -25,18 +27,25 @@ const Form = () => {
                     // Fetch silver amount after getting userId
                     const balanceData = await getUserBalance(data.uid);
                     const silverCurrency = balanceData.find(currency => currency.currency_name === 'Silver');
+                    const goldCurrency = balanceData.find(currency => currency.currency_name === 'Gold');
                     const silverQuantity = silverCurrency ? parseInt(silverCurrency.quantity) : 0;
+                    const goldQuantity = goldCurrency ? parseInt(silverCurrency.quantity) : 0;
+                    const exchangeRateData = await getExchangeRate();
                     setSilverAmount(silverQuantity);
+                    setGoldAmount(goldQuantity);
+                    setExchangeRate(exchangeRateData);
                 } catch (error) {
                     console.error('Error fetching user data:', error);
                     setError(error.message);
                     setUserId('Error');
                     setSilverAmount('Error');
+                    setGoldAmount('Error');
                 }
             } else {
                 setProfilePhotoUrl('https://via.placeholder.com/150');
                 setUserId('Error');
                 setSilverAmount('Error');
+                setGoldAmount('Error');
             }
         };
         fetchUserData();
@@ -63,11 +72,11 @@ const Form = () => {
             <div className="amounts">
                 <div className="amount">
                     <label>Статок</label>
-                    <span>0</span>
+                    <span>{goldAmount * exchangeRate}</span>
                 </div>
                 <div className="amount">
                     <label>Gold Amount</label>
-                    <span>0</span>
+                    <span>{goldAmount}</span>
                 </div>
                 <div className="amount">
                     <label>Silver Amount</label>
