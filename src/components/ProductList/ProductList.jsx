@@ -131,7 +131,7 @@ const ProductList = () => {
                     type="number"
                     value={userBaseRate}
                     onChange={handleSellOrBuyChange}
-                    step="0.1"
+                    step="1"
                     min="0"
                 />
                 <button onClick={handleButtonClick} className="buy-button">
