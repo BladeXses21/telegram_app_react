@@ -33,6 +33,8 @@ const ProductList = () => {
                     const currencyGold = parseFloat(currencyGoldData.currency_capacity);
                     const rate = parseFloat(exchangeRateData.rate);
 
+                    const usersData = await getUsers();
+
                     if (isNaN(totalGold) || isNaN(currencyGold) || isNaN(rate)) {
                         throw new Error('Invalid data');
                     }
@@ -40,6 +42,7 @@ const ProductList = () => {
                     const calculatedPrice = rate + 0.000000000001 * (totalGold / userBaseRate)
                     setGoldPrice(calculatedPrice.toFixed(8)); // Округлюємо до 2 знаків після коми
 
+                    setUsers(usersData);
                     setGoldAmount(totalGold);
                     setCurrencyGoldAmount(currencyGold);
                     setExchangeRate(rate.toFixed(8));
@@ -62,18 +65,6 @@ const ProductList = () => {
         setReload(false);
         fetchGoldAmount();
     }, [userBaseRate, tg, reload]);
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const usersData = await getUsers();
-                setUsers(usersData);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        };
-        fetchUsers();
-    }, []);
 
     const handleBuyGoldButtonClick = async () => {
         await handleBuyGold();
