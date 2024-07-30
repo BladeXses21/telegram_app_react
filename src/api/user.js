@@ -14,6 +14,16 @@ const getUserData = async (telegramUserId) => {
     }
 };
 
+const getUsers = async () => {
+    try {
+        const response = await axios.get(`${apiUrl}/api/user`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw error;
+    }
+};
+
 const getUserBalance = async (userId) => {
     try {
         const response = await axios.get(`${apiUrl}/api/user/${userId}/balance`);
@@ -91,4 +101,4 @@ const sellGold = async (userUid, amount) => {
     }
 };
 
-export { getUserData, getUserBalance, getTotalGold, getCurrencyGold, getExchangeRate, updateExchangeRate, buyGold, sellGold };
+export { getUserData, getUsers, getUserBalance, getTotalGold, getCurrencyGold, getExchangeRate, updateExchangeRate, buyGold, sellGold };

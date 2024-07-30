@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { getUserData, getTotalGold, getExchangeRate, getCurrencyGold, updateExchangeRate, buyGold, sellGold } from '../../api/user';
+import { getUserData, getTotalGold, getUsers, getExchangeRate, getCurrencyGold, updateExchangeRate, buyGold, sellGold } from '../../api/user';
 
 const ProductList = () => {
     const { tg } = useTelegram();
@@ -13,6 +13,7 @@ const ProductList = () => {
     const [sellPriceInSilver, setSellPriceInSilver] = useState('Loading...');
     const [userId, setUserId] = useState('Loading...');
     const [reload, setReload] = useState(false);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
         const fetchGoldAmount = async () => {
@@ -61,6 +62,18 @@ const ProductList = () => {
         setReload(false);
         fetchGoldAmount();
     }, [userBaseRate, tg, reload]);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const usersData = await getUsers();
+                setUsers(usersData);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+        fetchUsers();
+    }, []);
 
     const handleBuyGoldButtonClick = async () => {
         await handleBuyGold();
@@ -150,6 +163,16 @@ const ProductList = () => {
                 <button onClick={handleSellGoldButtonClick} className="sell-button">
                     Sell Gold
                 </button>
+            </div>
+            <div className="user-list">
+                <h2>User Balances</h2>
+                <ul>
+                    {users.map((user) => (
+                        <li key={user.id}>
+                            <span>{user.name} - Gold: {user.gold_balance}, Silver: {user.silver_balance}</span>
+                        </li>
+                    ))}
+                </ul>
             </div>
         </div>
     );
