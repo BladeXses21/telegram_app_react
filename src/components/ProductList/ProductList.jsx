@@ -22,17 +22,6 @@ const ProductList = () => {
             if (user && user.id) {
                 const telegramId = user.id;
                 try {
-                    // fetch users
-                    const userData = await fetchUsers();
-                    setUsers(userData);
-
-                    const balancesData = {};
-                    for (const user of usersData) {
-                        const balance = await fetchUserBalance(user.uid);
-                        balancesData[user.uid] = balance;
-                    }
-                    setBalances(balancesData);
-
                     // Отримання id користувача в бд
                     const data = await getUserData(telegramId);
                     setUserId(data.uid);
@@ -60,6 +49,19 @@ const ProductList = () => {
                     if (userBaseRate) {
                         const sellPrice = rate - 0.000000000001 * (totalGold / userBaseRate)
                         setSellPriceInSilver(sellPrice.toFixed(8));
+                    }
+                    try {
+                        const usersData = await fetchUsers();
+                        setUsers(usersData);
+
+                        const balancesData = {};
+                        for (const user of usersData) {
+                            const balance = await fetchUserBalance(user.uid);
+                            balancesData[user.uid] = balance;
+                        }
+                        setBalances(balancesData);
+                    } catch (error) {
+                        console.error('Error fetching data:', error);
                     }
                 } catch (error) {
                     console.error('Error fetching data:', error);
