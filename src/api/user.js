@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = 'https://e0dc-91-245-124-201.ngrok-free.app'; // todo - замінити url
+const apiUrl = 'https://6056-91-245-124-201.ngrok-free.app'; // todo - замінити url
 
 const getUserData = async (telegramUserId) => {
     try {
@@ -80,4 +80,15 @@ const buyGold = async (userUid, amount) => {
     }
 };
 
-export { getUserData, getUserBalance, getTotalGold, getCurrencyGold, getExchangeRate, updateExchangeRate, buyGold };
+const sellGold = async (userUid, amount) => {
+    try {
+        const response = await axios.post(`${apiUrl}/api/sell-gold`, { userUid: userUid, amount: amount });
+        console.log('Sell Gold API response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.log('Error in Sell Gold API call', error);
+        throw new Error('Error: ' + error.message);
+    }
+};
+
+export { getUserData, getUserBalance, getTotalGold, getCurrencyGold, getExchangeRate, updateExchangeRate, buyGold, sellGold };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { getUserData, getTotalGold, getExchangeRate, getCurrencyGold, updateExchangeRate, buyGold } from '../../api/user';
+import { getUserData, getTotalGold, getExchangeRate, getCurrencyGold, updateExchangeRate, buyGold, sellGold } from '../../api/user';
 
 const ProductList = () => {
     const { tg } = useTelegram();
@@ -62,12 +62,17 @@ const ProductList = () => {
         fetchGoldAmount();
     }, [userBaseRate, tg, reload]);
 
-    const handleButtonClick = async () => {
-        handleBuyGold();
-        handleUpdateExchangeRate();
+    const handleBuyGoldButtonClick = async () => {
+        await handleBuyGold();
+        await handleUpdateExchangeRate();
         setReload(true); // refresh page 
     };
 
+    const handleSellGoldButtonClick = async () => {
+        await handleSellGold();
+        await handleUpdateExchangeRate();
+        setReload(true);
+    };
 
     const handleSellOrBuyChange = (event) => {
         const user_input = parseFloat(event.target.value);
@@ -76,13 +81,23 @@ const ProductList = () => {
         }
     };
 
+    const handleSellGold = async () => {
+        try {
+            const result = await sellGold(userId, userBaseRate);
+            alert(`Successfully sold. UserId ${userId} Rate ${userBaseRate}`);
+        } catch (error) {
+            console.log('Error sell gold:', error);
+            alert(`Error selling gold ${userId} ${userBaseRate}`);
+        }
+    }
+
     const handleBuyGold = async () => {
         try {
             const result = await buyGold(userId, userBaseRate);
-            alert(`Successfully purchased. ${userId} ${userBaseRate}`)
+            alert(`Successfully purchased. ${userId} ${userBaseRate}`);
         } catch (error) {
             console.log('Error buying gold:', error);
-            alert(`Error buying gold ${userId} ${userBaseRate}`)
+            alert(`Error buying gold ${userId} ${userBaseRate}`);
         }
     };
 
@@ -94,11 +109,6 @@ const ProductList = () => {
             console.log('Error update exchange rate:', error)
             alert(`Error update exchange rate`)
         }
-    };
-
-    const handleSellGold = () => {
-        alert(`${userId} ${userBaseRate}`)
-        // логіку продажу золота тут
     };
 
     return (
@@ -134,10 +144,10 @@ const ProductList = () => {
                     step="1"
                     min="0"
                 />
-                <button onClick={handleButtonClick} className="buy-button">
+                <button onClick={handleBuyGoldButtonClick} className="buy-button">
                     Buy Gold
                 </button>
-                <button onClick={handleSellGold} className="sell-button">
+                <button onClick={handleSellGoldButtonClick} className="sell-button">
                     Sell Gold
                 </button>
             </div>
