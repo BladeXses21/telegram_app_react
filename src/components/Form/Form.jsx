@@ -10,6 +10,7 @@ const Form = () => {
     const [silverAmount, setSilverAmount] = useState('Loading...');
     const [goldAmount, setGoldAmount] = useState('Loading...');
     const [exchangeRate, setExchangeRate] = useState('Loading...');
+    const [silverEquivalent, setSilverEquivalent] = useState(0);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -37,8 +38,9 @@ const Form = () => {
 
                     // Обчислення еквівалент золота до срібла
                     const exchangeRateData = await getExchangeRate();
-                    setExchangeRate(exchangeRateData.rate);
-
+                    setExchangeRate(exchangeRateData);
+                    const silverValue = goldAmount * exchangeRate.rate
+                    setSilverEquivalent(silverValue);
                 } catch (error) {
                     console.error('Error fetching user data:', error);
                     setError(error.message);
@@ -73,7 +75,7 @@ const Form = () => {
             <div className="amounts">
                 <div className="amount">
                     <label>Статок</label>
-                    <span>{goldAmount * exchangeRate}</span>
+                    <span>{silverEquivalent.toFixed(2)}</span>
                 </div>
                 <div className="amount">
                     <label>Gold Amount</label>
