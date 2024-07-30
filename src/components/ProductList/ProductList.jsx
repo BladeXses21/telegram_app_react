@@ -160,7 +160,9 @@ const ProductList = () => {
                 <ul>
                     {users.map((user) => (
                         <li key={user.id}>
-                            <span>{user.name} - Gold: {user.gold_balance}, Silver: {user.silver_balance}</span>
+                            <span>{user.name}</span>
+                            <span>Gold: {user.gold_balance}</span>
+                            <span>Silver: {user.silver_balance}</span>
                         </li>
                     ))}
                 </ul>
