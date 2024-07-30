@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { getUserData, getTotalGold, fetchUsers, fetchUserBalance, getExchangeRate, getCurrencyGold, updateExchangeRate, buyGold, sellGold } from '../../api/user';
+import { getUserData, getTotalGold, fetchUsers, getUserBalance, getExchangeRate, getCurrencyGold, updateExchangeRate, buyGold, sellGold } from '../../api/user';
 
 const ProductList = () => {
     const { tg } = useTelegram();
@@ -51,12 +51,14 @@ const ProductList = () => {
                         setSellPriceInSilver(sellPrice.toFixed(8));
                     }
                     try {
+                        // Отримання користувачів
                         const usersData = await fetchUsers();
                         setUsers(usersData);
 
+                        // Отримання балансів кожного з користувачів
                         const balancesData = {};
                         for (const user of usersData) {
-                            const balance = await fetchUserBalance(user.uid);
+                            const balance = await getUserBalance(user.uid);
                             balancesData[user.uid] = balance;
                         }
                         setBalances(balancesData);
@@ -173,8 +175,8 @@ const ProductList = () => {
                         <div key={user.uid} className="user-item">
                             <h3>{user.username}</h3>
                             <ul>
-                                {balances[user.uid] && balances[user.uid].map(balance => (
-                                    <li key={balance.currency_name}>
+                                {balances[user.uid] && balances[user.uid].map((balance, index) => (
+                                    <li key={index}>
                                         {balance.currency_name}: {balance.quantity}
                                     </li>
                                 ))}

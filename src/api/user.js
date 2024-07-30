@@ -24,16 +24,6 @@ const fetchUsers = async () => {
     }
 };
 
-const fetchUserBalance = async (uid) => {
-    try {
-    const response = await axios.get(`${API_URL}/user/${uid}/balance`);
-    return response.data;
-    } catch (error) {
-        console.error('Error fetching user balance:', error);
-        throw error;
-    }
-};
-
 const getUserBalance = async (userId) => {
     try {
         const response = await axios.get(`${apiUrl}/api/user/${userId}/balance`);
@@ -111,4 +101,4 @@ const sellGold = async (userUid, amount) => {
     }
 };
 
-export { getUserData, fetchUsers, fetchUserBalance, getUserBalance, getTotalGold, getCurrencyGold, getExchangeRate, updateExchangeRate, buyGold, sellGold };
+export { getUserData, fetchUsers, getUserBalance, getTotalGold, getCurrencyGold, getExchangeRate, updateExchangeRate, buyGold, sellGold };
