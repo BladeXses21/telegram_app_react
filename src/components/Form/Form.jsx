@@ -27,17 +27,19 @@ const Form = () => {
 
                     // Fetch silver and gold amount after getting userId
                     const balanceData = await getUserBalance(data.uid);
+
                     const silverCurrency = balanceData.find(currency => currency.currency_name === 'Silver');
                     const goldCurrency = balanceData.find(currency => currency.currency_name === 'Gold');
+
                     const silverQuantity = silverCurrency ? parseInt(silverCurrency.quantity) : 0;
-                    const goldQuantity = goldCurrency ? parseInt(silverCurrency.quantity) : 0;
-                    const exchangeRateData = await getExchangeRate();
+                    const goldQuantity = goldCurrency ? parseInt(goldCurrency.quantity) : 0;
                     setSilverAmount(silverQuantity);
                     setGoldAmount(goldQuantity);
 
                     // Обчислення еквівалент золота до срібла
+                    const exchangeRateData = await getExchangeRate();
                     setExchangeRate(exchangeRateData);
-                    const silverValue = goldAmount * exchangeRate
+                    const silverValue = (goldAmount * exchangeRate)
                     setSilverEquivalent(silverValue);
                 } catch (error) {
                     console.error('Error fetching user data:', error);
